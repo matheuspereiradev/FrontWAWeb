@@ -1,0 +1,13 @@
+.button {
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+}
+
+.flags{
+    gap: .3rem;
+    margin-right: .8rem;
+    align-items: center;
+    justify-content: center;
+    display: flex;
+}
