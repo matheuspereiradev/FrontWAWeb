@@ -1,27 +1,19 @@
-import React from 'react';
-import { Layout, Menu, Card, Row, Col, Statistic } from 'antd';
-import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
-import { Bar } from '@ant-design/plots';
-import {
-  DashboardOutlined,
-  UserOutlined,
-  LineChartOutlined,
-  ApartmentOutlined,
-  BookOutlined,
-  ClockCircleOutlined,
-  FileSearchOutlined,
-  FileTextOutlined,
-  TeamOutlined,
-  SafetyCertificateOutlined,
-  CloudUploadOutlined,
-  SyncOutlined,
-  ShoppingCartOutlined,
-  SettingOutlined,
-  DatabaseOutlined,
-} from '@ant-design/icons';
-import SubMenu from 'antd/es/menu/SubMenu';
-import { useTranslation } from 'react-i18next';
 import LanguageSwitcher from '@/components/LanguageSwitcher';
+import {
+  ApartmentOutlined,
+  CloudUploadOutlined,
+  DatabaseOutlined,
+  SafetyCertificateOutlined,
+  SettingOutlined,
+  ShoppingCartOutlined,
+  SyncOutlined
+} from '@ant-design/icons';
+import { Bar } from '@ant-design/plots';
+import { Card, Col, Layout, Menu, Row, Statistic } from 'antd';
+import SubMenu from 'antd/es/menu/SubMenu';
+import { GetStaticPropsContext } from 'next';
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
+import { useTranslation } from 'react-i18next';
 
 const { Header, Content, Footer, Sider } = Layout;
 
@@ -75,25 +67,26 @@ const DashboardPage = () => {
           </Menu.Item>
 
           <SubMenu key="stocks" icon={<DatabaseOutlined />} title={t('stocks')}>
-            <Menu.Item key="stocks-zaf">{t('zaf')}</Menu.Item>
-            <Menu.Item key="stocks-baf">{t('baf')}</Menu.Item>
-            <Menu.Item key="stocks-daf">{t('daf')}</Menu.Item>
-            <Menu.Item key="stocks-sequence-by-center">{t('sequenceByCenter')}</Menu.Item>
+            <Menu.Item key="stocks-zaf">{t('stocks-zaf')}</Menu.Item>
+            <Menu.Item key="stocks-baf">{t('stocks-baf')}</Menu.Item>
+            <Menu.Item key="stocks-daf">{t('stocks-daf')}</Menu.Item>
+            <Menu.Item key="substitutions">{t('substitutions')}</Menu.Item>
+            <Menu.Item key="stocks-sequence-by-center">{t('stocks-sequence-by-center')}</Menu.Item>
           </SubMenu>
 
           <SubMenu key="masters" icon={<SettingOutlined />} title={t('masters')}>
-            <Menu.Item key="masters-calculated-columns">{t('calculatedColumns')}</Menu.Item>
-            <Menu.Item key="masters-production-calendar">{t('productionCalendar')}</Menu.Item>
-            <Menu.Item key="masters-variability-factor">{t('variabilityFactor')}</Menu.Item>
-            <Menu.Item key="masters-leadtime-factor">{t('leadtimeFactor')}</Menu.Item>
-            <Menu.Item key="masters-buffer-profile">{t('bufferProfile')}</Menu.Item>
-            <Menu.Item key="masters-buffer-type">{t('bufferType')}</Menu.Item>
-            <Menu.Item key="masters-allocation-group">{t('allocationGroup')}</Menu.Item>
-            <Menu.Item key="masters-centers">{t('centers')}</Menu.Item>
+            <Menu.Item key="masters-calculated-columns">{t('masters-calculated-columns')}</Menu.Item>
+            <Menu.Item key="masters-production-calendar">{t('masters-production-calendar')}</Menu.Item>
+            <Menu.Item key="masters-variability-factor">{t('masters-variability-factor')}</Menu.Item>
+            <Menu.Item key="masters-leadtime-factor">{t('masters-leadtime-factor')}</Menu.Item>
+            <Menu.Item key="masters-buffer-profile">{t('masters-buffer-profile')}</Menu.Item>
+            <Menu.Item key="masters-buffer-type">{t('masters-buffer-type')}</Menu.Item>
+            <Menu.Item key="masters-allocation-group">{t('masters-allocation-group')}</Menu.Item>
+            <Menu.Item key="masters-centers">{t('masters-centers')}</Menu.Item>
           </SubMenu>
 
 
-          <SubMenu key="masters-orders" icon={<ShoppingCartOutlined />} title={t("mastersOrders")}>
+          <SubMenu key="masters-orders" icon={<ShoppingCartOutlined />} title={t("orders")}>
             <Menu.Item key="orders-fake">{t("orders-fake")}</Menu.Item>
             <Menu.Item key="orders-transfer-tracking">{t("orders-transfer-tracking")}</Menu.Item>
             <Menu.Item key="orders-production-orders">{t("orders-production-orders")}</Menu.Item>
@@ -171,11 +164,11 @@ const DashboardPage = () => {
   );
 };
 
-export async function getStaticProps({ locale }) {
+export async function getStaticProps({ locale }: GetStaticPropsContext) {
 
   return {
     props: {
-      ...(await serverSideTranslations(locale ?? 'pt', ['common'])),
+      ...(await serverSideTranslations(locale ?? 'pt')),
     },
   };
 }
