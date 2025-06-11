@@ -1,19 +1,73 @@
 import LanguageSwitcher from '@/components/LanguageSwitcher';
 import {
   ApartmentOutlined,
+  BarChartOutlined,
+  CheckCircleOutlined,
+  CheckSquareOutlined,
+  CloseCircleOutlined,
+  CloseOutlined,
   CloudUploadOutlined,
+  ClusterOutlined,
   DatabaseOutlined,
+  DeploymentUnitOutlined,
+  FileAddOutlined,
+  FileSearchOutlined,
+  PlayCircleOutlined,
+  RiseOutlined,
   SafetyCertificateOutlined,
   SettingOutlined,
   ShoppingCartOutlined,
-  SyncOutlined
+  StopOutlined,
+  SyncOutlined,
+  TagOutlined,
+  TagsOutlined,
+  ToolOutlined
 } from '@ant-design/icons';
 import { Bar } from '@ant-design/plots';
-import { Card, Col, Layout, Menu, Row, Statistic } from 'antd';
+import { Button, Card, Col, Layout, Menu, Row, Space, Statistic, Table, Tooltip } from 'antd';
 import SubMenu from 'antd/es/menu/SubMenu';
 import { GetStaticPropsContext } from 'next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { useTranslation } from 'react-i18next';
+
+import { Select, Progress, Typography } from 'antd';
+import { useState } from 'react';
+
+const { Option } = Select;
+const { Text } = Typography;
+
+const data = [
+  { cor: 'Preto', valor: 21, corHex: '#000000' },
+  { cor: 'Vermelho', valor: 15, corHex: '#ff0000' },
+  { cor: 'Amarelo', valor: 20, corHex: '#ffaa00' },
+  { cor: 'Verde', valor: 7, corHex: '#00aa00' },
+  { cor: 'Azul', valor: 9, corHex: '#0000ff' },
+];
+
+const centers = [
+  { name: "São Paulo", id: "1", code: "SP" },
+  { name: "Salvador", id: "2", code: "BA" },
+  { name: "Fortaleza", id: "3", code: "CE" },
+  { name: "Brasília", id: "4", code: "DF" },
+  { name: "Rio de Janeiro", id: "5", code: "RJ" },
+];
+
+const dataSource = [
+  {
+    key: '1',
+    name: 'Mike',
+    age: 32,
+    address: '10 Downing Street',
+  },
+  {
+    key: '2',
+    name: 'John',
+    age: 42,
+    address: '10 Downing Street',
+  },
+];
+
+const total = data.reduce((acc, item) => acc + item.valor, 0);
 
 const { Header, Content, Footer, Sider } = Layout;
 
@@ -21,21 +75,51 @@ const DashboardPage = () => {
 
   const { t } = useTranslation('common');
 
-  const barConfig = {
-    data: [
-      { category: 'Jan', value: 38 },
-      { category: 'Feb', value: 52 },
-      { category: 'Mar', value: 61 },
-      { category: 'Apr', value: 145 },
-      { category: 'May', value: 48 },
-      { category: 'Jun', value: 38 },
-    ],
-    xField: 'value',
-    yField: 'category',
-    seriesField: 'category',
-    legend: { position: 'top-left' },
-    colorField: 'category',
+  const [selectedCentersKeys, setSelectedCentersKeys] = useState<React.Key[]>([]);
+
+  const rowSelectionCenters = {
+    selectedRowKeys: selectedCentersKeys,
+    onChange: (selectedKeys: React.Key[]) => {
+      setSelectedCentersKeys(selectedKeys);
+    },
   };
+
+  const mainColumns = [
+    {
+      title: 'Name',
+      dataIndex: 'name',
+      key: 'name',
+    },
+    {
+      title: 'Age',
+      dataIndex: 'age',
+      key: 'age',
+    },
+    {
+      title: 'Address',
+      dataIndex: 'address',
+      key: 'address',
+    },
+  ];
+
+  const centerColumns = [
+    {
+      title: 'ID',
+      dataIndex: 'id',
+      key: 'id',
+    },
+    {
+      title: 'Nome',
+      dataIndex: 'name',
+      key: 'name',
+    },
+    {
+      title: 'Código',
+      dataIndex: 'code',
+      key: 'code',
+    },
+  ];
+
 
   return (
     <Layout style={{ minHeight: '100vh' }}>
@@ -129,32 +213,116 @@ const DashboardPage = () => {
           <LanguageSwitcher />
         </Header>
         <Content style={{ margin: '24px 16px 0' }}>
-          <Row gutter={[16, 16]}>
-            <Col xs={24} sm={12} md={6}>
+
+          <div style={{ display: 'flex', justifyContent: 'space-between', padding: 12, gap: 24, backgroundColor: 'white', overflowX: 'auto' }}>
+            <Card title="Espaço de trabalho">
+              <Space direction="vertical" size="small">
+                <Space>
+                  <Button icon={<CheckCircleOutlined />}>Iniciar</Button>
+                  <Button disabled icon={<CloseCircleOutlined />}>Finalizar</Button>
+                </Space>
+
+                <Space>
+                  <Button icon={<CheckCircleOutlined />}>Aprovar</Button>
+                  <Button icon={<CloseCircleOutlined />}>Desaprovar</Button>
+                </Space>
+              </Space>
+            </Card>
+
+            <Card title="Dados">
+              <Space direction="vertical" size="small">
+                <Space>
+                  <Button icon={<DatabaseOutlined />}>Consumo Projetado</Button>
+                  <Button icon={<SettingOutlined />}>Configuração de Buffer</Button>
+                </Space>
+                <Space>
+                  <Button icon={<RiseOutlined />}>Picos e Faturamentos</Button>
+                  <Button icon={<BarChartOutlined />}>Gráfico</Button>
+                </Space>
+              </Space>
+            </Card>
+
+            <Card title="Outras Funções">
+              <Space direction="vertical" size="small">
+                <Button icon={<FileAddOutlined />}>Adicionar Motivo</Button>
+                <Button icon={<TagsOutlined />}>Definir Etiqueta</Button>
+                <Button icon={<TagOutlined />}>Criar Etiqueta</Button>
+              </Space>
+            </Card>
+
+            <Card title="Distribuição Priorizada">
+              <Space direction="vertical" size="small">
+                <Button icon={<CheckCircleOutlined />}>Distribuição Eficiente</Button>
+                <Button icon={<DeploymentUnitOutlined />}>Carregar Alocação Priorizada</Button>
+                <Button icon={<CheckCircleOutlined />}>Sugerir Alocação Priorizada</Button>
+              </Space>
+            </Card>
+
+            <Card title="Grupo de Alocação">
+              <Space direction="vertical" size="small">
+                <Button icon={<ClusterOutlined />}>Adicionar </Button>
+                <Button icon={<ToolOutlined />}>Remover</Button>
+              </Space>
+            </Card>
+          </div>
+
+          <Row gutter={16} style={{ marginTop: 24 }}>
+
+            <Col span={17}>
               <Card>
-                <Statistic title="Usuários Ativos" value={1128} />
+                <Table dataSource={dataSource} columns={mainColumns} pagination={false} />
               </Card>
             </Col>
-            <Col xs={24} sm={12} md={6}>
-              <Card>
-                <Statistic title="Vendas Hoje" value={934} suffix="R$" />
+            <Col span={7}>
+              <Card style={{ width: '100%' }}>
+                <Table
+                  dataSource={centers}
+                  rowSelection={rowSelectionCenters}
+                  columns={centerColumns}
+                  size='small'
+                  rowKey="id"
+                  pagination={false}
+                />
               </Card>
-            </Col>
-            <Col xs={24} sm={12} md={6}>
-              <Card>
-                <Statistic title="Visitas" value={7854} />
-              </Card>
-            </Col>
-            <Col xs={24} sm={12} md={6}>
-              <Card>
-                <Statistic title="Conversões" value={73} suffix="%" />
+              <Card style={{ width: '100%' }}>
+                <div style={{ marginBottom: 16 }}>
+                  <Text strong style={{ marginRight: 8 }}>Campo Resumo</Text>
+                  <Select defaultValue="Vista Planejamento" style={{ width: 200 }}>
+                    <Option value="planning">Vista Planejamento</Option>
+                    <Option value="execution">Vista Execução</Option>
+                    <Option value="analitycs">Vista Analítica</Option>
+                  </Select>
+                </div>
+
+                {data.map((item) => {
+                  const porcentagem = total === 0 ? 0 : Math.round((item.valor / total) * 100);
+                  return (
+                    <Row key={item.cor} align="middle" style={{ marginBottom: 8 }}>
+                      <Col span={4}>
+                        <Text style={{ color: item.corHex }}>{item.cor}</Text>
+                      </Col>
+                      <Col span={2}>
+                        <Text>{item.valor}</Text>
+                      </Col>
+                      <Col span={18}>
+                        <Progress
+                          percent={porcentagem}
+                          showInfo
+                          strokeColor={item.corHex}
+                          size="small"
+                        />
+                      </Col>
+                    </Row>
+                  );
+                })}
+
+                <Row justify="end" style={{ marginTop: 16 }}>
+                  <Text strong>Total {total}</Text>
+                </Row>
               </Card>
             </Col>
           </Row>
 
-          <Card title="Desempenho Mensal" style={{ marginTop: 24 }}>
-            <Bar {...barConfig} />
-          </Card>
         </Content>
         <Footer style={{ textAlign: 'center' }}>
           ©2025 Criado com Ant Design
