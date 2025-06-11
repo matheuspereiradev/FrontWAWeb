@@ -22,6 +22,7 @@ import {
 import SubMenu from 'antd/es/menu/SubMenu';
 import { useTranslation } from 'react-i18next';
 import LanguageSwitcher from '@/components/LanguageSwitcher';
+import LanguageController from '@/interfaces/LanguageSwitcher';
 
 const { Header, Content, Footer, Sider } = Layout;
 
@@ -47,7 +48,7 @@ const DashboardPage = () => {
 
   return (
     <Layout style={{ minHeight: '100vh' }}>
-      <Sider breakpoint="lg" collapsedWidth="0" width={250}>
+      <Sider breakpoint="lg" collapsedWidth="0" width={250} style={{ height: '100vh', overflowY: 'auto' }}>
         <div
           style={{
             height: 64,
@@ -68,7 +69,7 @@ const DashboardPage = () => {
           mode="inline"
           theme='dark'
           defaultOpenKeys={['inventory-management']}
-          style={{ height: '100%', borderRight: 0 }}
+          style={{ borderRight: 0 }}
         >
           <Menu.Item key="inventory-management" icon={<ApartmentOutlined />}>
             {t('inventoryManagement')}
@@ -130,48 +131,50 @@ const DashboardPage = () => {
         </Menu>
       </Sider>
 
-      <Layout>
-        <Header style={{ background: '#fff', padding: 0, paddingLeft: 24, display: 'flex', alignItems: 'center' }}>
-          <h2 style={{ flex: 1 }}>Dashboard</h2>
-          <LanguageSwitcher />
-        </Header>
-        <Content style={{ margin: '24px 16px 0' }}>
-          <Row gutter={[16, 16]}>
-            <Col xs={24} sm={12} md={6}>
-              <Card>
-                <Statistic title="Usuários Ativos" value={1128} />
-              </Card>
-            </Col>
-            <Col xs={24} sm={12} md={6}>
-              <Card>
-                <Statistic title="Vendas Hoje" value={934} suffix="R$" />
-              </Card>
-            </Col>
-            <Col xs={24} sm={12} md={6}>
-              <Card>
-                <Statistic title="Visitas" value={7854} />
-              </Card>
-            </Col>
-            <Col xs={24} sm={12} md={6}>
-              <Card>
-                <Statistic title="Conversões" value={73} suffix="%" />
-              </Card>
-            </Col>
-          </Row>
+      <div style={{ height: '100vh', overflowY: 'auto', width: '100%' }}>
+        <Layout>
+          <Header style={{ background: '#fff', padding: 0, paddingLeft: 24, display: 'flex', alignItems: 'center' }}>
+            <h2 style={{ flex: 1 }}>Dashboard</h2>
+            <LanguageSwitcher />
+          </Header>
+          <Content style={{ margin: '24px 16px 0' }}>
+            <Row gutter={[16, 16]}>
+              <Col xs={24} sm={12} md={6}>
+                <Card>
+                  <Statistic title="Usuários Ativos" value={1128} />
+                </Card>
+              </Col>
+              <Col xs={24} sm={12} md={6}>
+                <Card>
+                  <Statistic title="Vendas Hoje" value={934} suffix="R$" />
+                </Card>
+              </Col>
+              <Col xs={24} sm={12} md={6}>
+                <Card>
+                  <Statistic title="Visitas" value={7854} />
+                </Card>
+              </Col>
+              <Col xs={24} sm={12} md={6}>
+                <Card>
+                  <Statistic title="Conversões" value={73} suffix="%" />
+                </Card>
+              </Col>
+            </Row>
 
-          <Card title="Desempenho Mensal" style={{ marginTop: 24 }}>
-            <Bar {...barConfig} />
-          </Card>
-        </Content>
+            <Card title="Desempenho Mensal" style={{ marginTop: 24 }}>
+              <Bar {...barConfig} />
+            </Card>
+          </Content>
+        </Layout>
         <Footer style={{ textAlign: 'center' }}>
           ©2025 Criado com Ant Design
         </Footer>
-      </Layout>
+      </div>
     </Layout>
   );
 };
 
-export async function getStaticProps({ locale }) {
+export async function getStaticProps({ locale }: LanguageController) {
 
   return {
     props: {
