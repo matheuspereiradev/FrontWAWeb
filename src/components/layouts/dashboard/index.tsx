@@ -49,9 +49,9 @@ const Dashboard = ({ children, title }: Props) => {
           </Menu.Item>
 
           <SubMenu key="stocks" icon={<DatabaseOutlined />} title={t('stocks')}>
-            <Menu.Item key="stocks-zaf">{t('stocks-zaf')}</Menu.Item>
-            <Menu.Item key="stocks-baf">{t('stocks-baf')}</Menu.Item>
-            <Menu.Item key="stocks-daf">{t('stocks-daf')}</Menu.Item>
+            <Menu.Item key="stocks-zaf"><Link href="/stock/zaf">{t('stocks-zaf')}</Link></Menu.Item>
+            <Menu.Item key="stocks-baf"><Link href="/stock/baf">{t('stocks-baf')}</Link></Menu.Item>
+            <Menu.Item key="stocks-daf"><Link href="/stock/daf">{t('stocks-daf')}</Link></Menu.Item>
             <Menu.Item key="substitutions">{t('substitutions')}</Menu.Item>
             <Menu.Item key="stocks-sequence-by-center">{t('stocks-sequence-by-center')}</Menu.Item>
           </SubMenu>
