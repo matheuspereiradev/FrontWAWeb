@@ -32,6 +32,8 @@ import { useTranslation } from 'react-i18next';
 
 import { Select, Progress, Typography } from 'antd';
 import { useState } from 'react';
+import { ExpandableConfig } from 'antd/es/table/interface';
+import dataSource from '../data/centerproduct.json';
 
 const { Option } = Select;
 const { Text } = Typography;
@@ -52,20 +54,7 @@ const centers = [
   { name: "Rio de Janeiro", id: "5", code: "RJ" },
 ];
 
-const dataSource = [
-  {
-    key: '1',
-    name: 'Mike',
-    age: 32,
-    address: '10 Downing Street',
-  },
-  {
-    key: '2',
-    name: 'John',
-    age: 42,
-    address: '10 Downing Street',
-  },
-];
+
 
 const total = data.reduce((acc, item) => acc + item.valor, 0);
 
@@ -84,23 +73,149 @@ const DashboardPage = () => {
     },
   };
 
+  const generateTextFilter = (dataIndex: string) => ({
+    filters: [],
+    onFilter: (value: string, record: any) =>
+      record[dataIndex]?.toString().toLowerCase().includes(value.toLowerCase()),
+    filterSearch: true,
+  });
+
   const mainColumns = [
     {
-      title: 'Name',
-      dataIndex: 'name',
-      key: 'name',
+      title: 'IdCentroProduto',
+      dataIndex: 'IdProductoBodega',
+      key: 'IdProductoBodega',
+      sorter: (a: any, b: any) => a.IdProductoBodega - b.IdProductoBodega,
+      ...generateTextFilter('IdProductoBodega'),
     },
     {
-      title: 'Age',
-      dataIndex: 'age',
-      key: 'age',
+      title: 'IdCentro',
+      dataIndex: 'IdBodega',
+      key: 'IdBodega',
+      sorter: (a: any, b: any) => a.IdBodega - b.IdBodega,
+      ...generateTextFilter('IdBodega'),
     },
     {
-      title: 'Address',
-      dataIndex: 'address',
-      key: 'address',
+      title: 'IdProduto',
+      dataIndex: 'IdProducto',
+      key: 'IdProducto',
+      sorter: (a: any, b: any) => a.IdProducto - b.IdProducto,
+      ...generateTextFilter('IdProducto'),
+    },
+    {
+      title: 'Referencia',
+      dataIndex: 'Referencia',
+      key: 'Referencia',
+      sorter: (a: any, b: any) => a.Referencia.localeCompare(b.Referencia),
+      ...generateTextFilter('Referencia'),
+    },
+    {
+      title: 'Descrição',
+      dataIndex: 'Descripcion',
+      key: 'Descripcion',
+      sorter: (a: any, b: any) => a.Descripcion.localeCompare(b.Descripcion),
+      ...generateTextFilter('Descripcion'),
+    },
+    {
+      title: 'Centro',
+      dataIndex: 'Bodega',
+      key: 'Bodega',
+      sorter: (a: any, b: any) => a.Bodega.localeCompare(b.Bodega),
+      ...generateTextFilter('Bodega'),
+    },
+    {
+      title: 'Cod Centro',
+      dataIndex: 'CodBodega',
+      key: 'CodBodega',
+      sorter: (a: any, b: any) => a.CodBodega.localeCompare(b.CodBodega),
+      ...generateTextFilter('CodBodega'),
+    },
+    {
+      title: 'Unidade Medida',
+      dataIndex: 'Unidad',
+      key: 'Unidad',
+      sorter: (a: any, b: any) => a.Unidad.localeCompare(b.Unidad),
+      ...generateTextFilter('Unidad'),
+    },
+    {
+      title: 'Linha',
+      dataIndex: 'Linea',
+      key: 'Linea',
+      sorter: (a: any, b: any) => a.Linea.localeCompare(b.Linea),
+      ...generateTextFilter('Linea'),
+    },
+    {
+      title: 'SubLinha',
+      dataIndex: 'SubLinea',
+      key: 'SubLinea',
+      sorter: (a: any, b: any) => a.SubLinea.localeCompare(b.SubLinea),
+      ...generateTextFilter('SubLinea'),
+    },
+    {
+      title: 'Estoque',
+      dataIndex: 'Stock',
+      key: 'Stock',
+      sorter: (a: any, b: any) => a.Stock - b.Stock,
+      ...generateTextFilter('Stock'),
+    },
+    {
+      title: 'Estoque em Transito',
+      dataIndex: 'StockEnTransito',
+      key: 'StockEnTransito',
+      sorter: (a: any, b: any) => a.StockEnTransito - b.StockEnTransito,
+      ...generateTextFilter('StockEnTransito'),
+    },
+    {
+      title: 'Saídas',
+      dataIndex: 'CantidadPD',
+      key: 'CantidadPD',
+      sorter: (a: any, b: any) => a.CantidadPD - b.CantidadPD,
+      ...generateTextFilter('CantidadPD'),
+    },
+    {
+      title: 'ADI',
+      dataIndex: 'ADI',
+      key: 'ADI',
+      sorter: (a: any, b: any) => a.ADI - b.ADI,
+      ...generateTextFilter('ADI'),
+    },
+    {
+      title: 'Pedido',
+      dataIndex: 'CantidadAPedir',
+      key: 'CantidadAPedir',
+      sorter: (a: any, b: any) => a.CantidadAPedir - b.CantidadAPedir,
+      ...generateTextFilter('CantidadAPedir'),
+    },
+    {
+      title: 'MOQ',
+      dataIndex: 'CantMinPedido',
+      key: 'CantMinPedido',
+      sorter: (a: any, b: any) => a.CantMinPedido - b.CantMinPedido,
+      ...generateTextFilter('CantMinPedido'),
+    },
+    {
+      title: 'Qnt de embalagem',
+      dataIndex: 'CantEmpaque',
+      key: 'CantEmpaque',
+      sorter: (a: any, b: any) => a.CantEmpaque - b.CantEmpaque,
+      ...generateTextFilter('CantEmpaque'),
+    },
+    {
+      title: 'CampoAd1',
+      dataIndex: 'CampoAd1',
+      key: 'CampoAd1',
+      sorter: (a: any, b: any) => a.CampoAd1.localeCompare(b.CampoAd1),
+      ...generateTextFilter('CampoAd1'),
+    },
+    {
+      title: 'CampoAd2',
+      dataIndex: 'CampoAd2',
+      key: 'CampoAd2',
+      sorter: (a: any, b: any) => a.CampoAd2.localeCompare(b.CampoAd2),
+      ...generateTextFilter('CampoAd2'),
     },
   ];
+
 
   const centerColumns = [
     {
@@ -119,6 +234,16 @@ const DashboardPage = () => {
       key: 'code',
     },
   ];
+  const defaultExpandable: ExpandableConfig<any> = {
+    expandedRowRender: (record: any) => <p>{record.description}</p>,
+  };
+
+  const [expandable, setExpandable] = useState<ExpandableConfig<any>>(defaultExpandable);
+
+  const handleExpandChange = (enable: boolean) => {
+    //@ts-ignore
+    setExpandable(enable ? defaultExpandable : undefined);
+  };
 
 
   return (
@@ -270,7 +395,7 @@ const DashboardPage = () => {
 
             <Col span={17}>
               <Card>
-                <Table dataSource={dataSource} columns={mainColumns} pagination={false} />
+                <Table dataSource={dataSource} scroll={{ x: 1200 }} columns={mainColumns} pagination={false} expandable={expandable} />
               </Card>
             </Col>
             <Col span={7}>
