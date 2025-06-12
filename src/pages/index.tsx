@@ -1,25 +1,28 @@
 import {
   BarChartOutlined,
+  CalendarOutlined,
   CheckCircleOutlined,
   CloseCircleOutlined,
   ClusterOutlined,
   DatabaseOutlined,
   DeploymentUnitOutlined,
+  DownOutlined,
   FileAddOutlined,
+  GroupOutlined,
   RiseOutlined,
   SettingOutlined,
   TagOutlined,
   TagsOutlined,
   ToolOutlined
 } from '@ant-design/icons';
-import { Button, Card, Col, Layout, Row, Space, Table } from 'antd';
+import { Button, Card, Col, Dropdown, Layout, Row, Space, Table } from 'antd';
 import { GetStaticPropsContext } from 'next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { useTranslation } from 'react-i18next';
 
 import { Select, Progress, Typography } from 'antd';
 import { useState } from 'react';
-import { ExpandableConfig } from 'antd/es/table/interface';
+import { ColumnsType, ExpandableConfig } from 'antd/es/table/interface';
 import dataSource from '../data/centerproduct.json';
 import Dashboard from '@/components/layouts/dashboard';
 
@@ -64,140 +67,247 @@ const DashboardPage = () => {
     filterSearch: true,
   });
 
-  const mainColumns = [
+  const mainColumns: ColumnsType<any> = [
+    {
+      title: 'Ações',
+      key: 'action',
+      sorter: false,
+      render: () => (
+        <Space size="middle">
+          <Dropdown menu={{
+            items: [
+              {
+                key: '1',
+                label: (
+                  <a target="_blank" rel="noopener noreferrer" href="https://www.antgroup.com">
+                    Adicionar Motivo
+                  </a>
+                ),
+                icon: <FileAddOutlined />,
+              },
+              {
+                key: '2',
+                label: (
+                  <a target="_blank" rel="noopener noreferrer" href="https://www.antgroup.com">
+                    Remover Motivo
+                  </a>
+                ),
+                icon: <FileAddOutlined />,
+              },
+              {
+                key: '3',
+                icon: <TagsOutlined />,
+                label: (
+                  <a target="_blank" rel="noopener noreferrer" href="https://www.antgroup.com">
+                    Definir Etiqueta
+                  </a>
+                ),
+              },
+              {
+                key: '4',
+                icon: <TagsOutlined />,
+                disabled: true,
+                label: (
+                  <a target="_blank" rel="noopener noreferrer" href="https://www.antgroup.com">
+                    Remover Etiqueta
+                  </a>
+                ),
+              },
+              {
+                key: '5',
+                icon: <GroupOutlined />,
+                label: (
+                  <a target="_blank" rel="noopener noreferrer" href="https://www.antgroup.com">
+                    Adicionar Grupo de Alocação
+                  </a>
+                ),
+              },
+              {
+                key: '6',
+                icon: <GroupOutlined />,
+                disabled: true,
+                label: (
+                  <a target="_blank" rel="noopener noreferrer" href="https://www.antgroup.com">
+                    Remover Grupo de Alocação
+                  </a>
+                ),
+              },
+            ]
+          }}>
+            <a onClick={(e) => e.preventDefault()}>
+              <Space>
+                Adicionar
+                <DownOutlined />
+              </Space>
+            </a>
+          </Dropdown>
+          <Dropdown menu={{
+            items: [
+              {
+                key: '1',
+                label: (
+                  <a target="_blank" rel="noopener noreferrer" href="https://www.antgroup.com">
+                    Consumo projetado
+                  </a>
+                ),
+                icon: <CalendarOutlined />,
+              },
+              {
+                key: '2',
+                label: (
+                  <a target="_blank" rel="noopener noreferrer" href="https://www.antgroup.com">
+                    Configuração de buffer
+                  </a>
+                ),
+                icon: <SettingOutlined />,
+              },
+              {
+                key: '3',
+                icon: <RiseOutlined />,
+                label: (
+                  <a target="_blank" rel="noopener noreferrer" href="https://www.antgroup.com">
+                    Picos e faturamentos
+                  </a>
+                ),
+              },
+              {
+                key: '4',
+                icon: <BarChartOutlined />,
+                label: (
+                  <a target="_blank" rel="noopener noreferrer" href="https://www.antgroup.com">
+                    Gráfico Estoque Histórico
+                  </a>
+                ),
+              },
+            ]
+
+
+          }}>
+            <a onClick={(e) => e.preventDefault()}>
+              <Space>
+                Detalhes
+                <DownOutlined />
+              </Space>
+            </a>
+          </Dropdown>
+        </Space>
+      ),
+    },
     {
       title: 'IdCentroProduto',
       dataIndex: 'IdProductoBodega',
       key: 'IdProductoBodega',
       sorter: (a: any, b: any) => a.IdProductoBodega - b.IdProductoBodega,
-      ...generateTextFilter('IdProductoBodega'),
     },
     {
       title: 'IdCentro',
       dataIndex: 'IdBodega',
       key: 'IdBodega',
       sorter: (a: any, b: any) => a.IdBodega - b.IdBodega,
-      ...generateTextFilter('IdBodega'),
     },
     {
       title: 'IdProduto',
       dataIndex: 'IdProducto',
       key: 'IdProducto',
       sorter: (a: any, b: any) => a.IdProducto - b.IdProducto,
-      ...generateTextFilter('IdProducto'),
     },
     {
       title: 'Referencia',
       dataIndex: 'Referencia',
       key: 'Referencia',
       sorter: (a: any, b: any) => a.Referencia.localeCompare(b.Referencia),
-      ...generateTextFilter('Referencia'),
     },
     {
       title: 'Descrição',
       dataIndex: 'Descripcion',
       key: 'Descripcion',
       sorter: (a: any, b: any) => a.Descripcion.localeCompare(b.Descripcion),
-      ...generateTextFilter('Descripcion'),
     },
     {
       title: 'Centro',
       dataIndex: 'Bodega',
       key: 'Bodega',
       sorter: (a: any, b: any) => a.Bodega.localeCompare(b.Bodega),
-      ...generateTextFilter('Bodega'),
     },
     {
       title: 'Cod Centro',
       dataIndex: 'CodBodega',
       key: 'CodBodega',
       sorter: (a: any, b: any) => a.CodBodega.localeCompare(b.CodBodega),
-      ...generateTextFilter('CodBodega'),
     },
     {
       title: 'Unidade Medida',
       dataIndex: 'Unidad',
       key: 'Unidad',
       sorter: (a: any, b: any) => a.Unidad.localeCompare(b.Unidad),
-      ...generateTextFilter('Unidad'),
     },
     {
       title: 'Linha',
       dataIndex: 'Linea',
       key: 'Linea',
       sorter: (a: any, b: any) => a.Linea.localeCompare(b.Linea),
-      ...generateTextFilter('Linea'),
     },
     {
       title: 'SubLinha',
       dataIndex: 'SubLinea',
       key: 'SubLinea',
       sorter: (a: any, b: any) => a.SubLinea.localeCompare(b.SubLinea),
-      ...generateTextFilter('SubLinea'),
     },
     {
       title: 'Estoque',
       dataIndex: 'Stock',
       key: 'Stock',
       sorter: (a: any, b: any) => a.Stock - b.Stock,
-      ...generateTextFilter('Stock'),
     },
     {
       title: 'Estoque em Transito',
       dataIndex: 'StockEnTransito',
       key: 'StockEnTransito',
       sorter: (a: any, b: any) => a.StockEnTransito - b.StockEnTransito,
-      ...generateTextFilter('StockEnTransito'),
     },
     {
       title: 'Saídas',
       dataIndex: 'CantidadPD',
       key: 'CantidadPD',
       sorter: (a: any, b: any) => a.CantidadPD - b.CantidadPD,
-      ...generateTextFilter('CantidadPD'),
     },
     {
       title: 'ADI',
       dataIndex: 'ADI',
       key: 'ADI',
       sorter: (a: any, b: any) => a.ADI - b.ADI,
-      ...generateTextFilter('ADI'),
     },
     {
       title: 'Pedido',
       dataIndex: 'CantidadAPedir',
       key: 'CantidadAPedir',
       sorter: (a: any, b: any) => a.CantidadAPedir - b.CantidadAPedir,
-      ...generateTextFilter('CantidadAPedir'),
     },
     {
       title: 'MOQ',
       dataIndex: 'CantMinPedido',
       key: 'CantMinPedido',
       sorter: (a: any, b: any) => a.CantMinPedido - b.CantMinPedido,
-      ...generateTextFilter('CantMinPedido'),
     },
     {
       title: 'Qnt de embalagem',
       dataIndex: 'CantEmpaque',
       key: 'CantEmpaque',
       sorter: (a: any, b: any) => a.CantEmpaque - b.CantEmpaque,
-      ...generateTextFilter('CantEmpaque'),
     },
     {
       title: 'CampoAd1',
       dataIndex: 'CampoAd1',
       key: 'CampoAd1',
       sorter: (a: any, b: any) => a.CampoAd1.localeCompare(b.CampoAd1),
-      ...generateTextFilter('CampoAd1'),
     },
     {
       title: 'CampoAd2',
       dataIndex: 'CampoAd2',
       key: 'CampoAd2',
       sorter: (a: any, b: any) => a.CampoAd2.localeCompare(b.CampoAd2),
-      ...generateTextFilter('CampoAd2'),
-    },
+    }
+
   ];
 
 
@@ -232,7 +342,7 @@ const DashboardPage = () => {
 
   return (
     <Dashboard title='Dashboard'>
-      <div>
+      <div style={{ display: 'flex', padding: 12, gap: 24, backgroundColor: 'white', overflowX: 'auto' }}>
         <Card title="Espaço de trabalho">
           <Space direction="vertical" size="small">
             <Space>
@@ -247,26 +357,6 @@ const DashboardPage = () => {
           </Space>
         </Card>
 
-        <Card title="Dados">
-          <Space direction="vertical" size="small">
-            <Space>
-              <Button icon={<DatabaseOutlined />}>Consumo Projetado</Button>
-              <Button icon={<SettingOutlined />}>Configuração de Buffer</Button>
-            </Space>
-            <Space>
-              <Button icon={<RiseOutlined />}>Picos e Faturamentos</Button>
-              <Button icon={<BarChartOutlined />}>Gráfico</Button>
-            </Space>
-          </Space>
-        </Card>
-
-        <Card title="Outras Funções">
-          <Space direction="vertical" size="small">
-            <Button icon={<FileAddOutlined />}>Adicionar Motivo</Button>
-            <Button icon={<TagsOutlined />}>Definir Etiqueta</Button>
-            <Button icon={<TagOutlined />}>Criar Etiqueta</Button>
-          </Space>
-        </Card>
 
         <Card title="Distribuição Priorizada">
           <Space direction="vertical" size="small">
@@ -276,10 +366,9 @@ const DashboardPage = () => {
           </Space>
         </Card>
 
-        <Card title="Grupo de Alocação">
+        <Card title="Outras Funções">
           <Space direction="vertical" size="small">
-            <Button icon={<ClusterOutlined />}>Adicionar </Button>
-            <Button icon={<ToolOutlined />}>Remover</Button>
+            <Button icon={<TagOutlined />}>Criar Etiqueta</Button>
           </Space>
         </Card>
       </div>
