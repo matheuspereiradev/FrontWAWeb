@@ -129,13 +129,4 @@ const Dashboard = ({ children, title }: Props) => {
   );
 };
 
-export async function getStaticProps({ locale }: GetStaticPropsContext) {
-
-  return {
-    props: {
-      ...(await serverSideTranslations(locale ?? 'pt', ['common'])),
-    },
-  };
-}
-
 export default Dashboard;
