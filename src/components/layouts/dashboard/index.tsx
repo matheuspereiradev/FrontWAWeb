@@ -10,8 +10,6 @@ import {
 } from '@ant-design/icons';
 import { Layout, Menu } from 'antd';
 import SubMenu from 'antd/es/menu/SubMenu';
-import { GetStaticPropsContext } from 'next';
-import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { useTranslation } from 'react-i18next';
 
 import { Props } from '@/types/components/layouts/dashboard/props'
@@ -111,7 +109,7 @@ const Dashboard = ({ children, title }: Props) => {
           position: 'sticky', top: '0', zIndex: '999',
           background: '#fff', padding: 0, paddingLeft: 24,
           display: 'flex', alignItems: 'center',
-          boxShadow: '-5px 5px 15px -10px #000000'
+          boxShadow: '0px 5px 10px -10px #000000'
         }}>
           <h2 style={{ flex: 1 }}>{title}</h2>
           <LanguageSwitcher />

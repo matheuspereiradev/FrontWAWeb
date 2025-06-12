@@ -231,7 +231,7 @@ const DashboardPage = () => {
 
 
   return (
-    <Dashboard>
+    <Dashboard title='Dashboard'>
       <div>
         <Card title="Espaço de trabalho">
           <Space direction="vertical" size="small">
