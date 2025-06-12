@@ -248,7 +248,7 @@ const DashboardPage = () => {
 
   return (
     <Layout style={{ minHeight: '100vh' }}>
-      <Sider breakpoint="lg" collapsedWidth="0" width={250}>
+      <Sider breakpoint="lg" collapsedWidth="0" width={250} style={{ height: '100vh', overflowY: 'auto' }}>
         <div
           style={{
             height: 64,
@@ -269,7 +269,7 @@ const DashboardPage = () => {
           mode="inline"
           theme='dark'
           defaultOpenKeys={['inventory-management']}
-          style={{ height: '100%', borderRight: 0 }}
+          style={{ borderRight: 0 }}
         >
           <Menu.Item key="inventory-management" icon={<ApartmentOutlined />}>
             {t('inventoryManagement')}
@@ -339,7 +339,7 @@ const DashboardPage = () => {
         </Header>
         <Content style={{ margin: '24px 16px 0' }}>
 
-          <div style={{ display: 'flex', justifyContent: 'space-between', padding: 12, gap: 24, backgroundColor: 'white', overflowX: 'auto' }}>
+          <div style={{ height: '100vh', overflowY: 'auto', width: '100%' }}>
             <Card title="Espaço de trabalho">
               <Space direction="vertical" size="small">
                 <Space>
@@ -452,7 +452,7 @@ const DashboardPage = () => {
         <Footer style={{ textAlign: 'center' }}>
           ©2025 Criado com Ant Design
         </Footer>
-      </Layout>
+      </div>
     </Layout>
   );
 };
