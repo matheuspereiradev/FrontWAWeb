@@ -13,6 +13,7 @@ import SubMenu from 'antd/es/menu/SubMenu';
 import { useTranslation } from 'react-i18next';
 
 import { Props } from '@/types/components/layouts/dashboard/props'
+import Link from 'next/link';
 
 const { Header, Content, Footer, Sider } = Layout;
 
@@ -97,7 +98,7 @@ const Dashboard = ({ children, title }: Props) => {
           </SubMenu>
 
           <SubMenu key="import" icon={<CloudUploadOutlined />} title={t("mastersImport")}>
-            <Menu.Item key="import-forecast">{t("import-forecast")}</Menu.Item>
+            <Menu.Item key="import-forecast"><Link href="/import/forecast">{t("import-forecast")}</Link></Menu.Item>
             <Menu.Item key="import-allocation-groups">{t("import-allocation-groups")}</Menu.Item>
           </SubMenu>
 

@@ -36,12 +36,12 @@ const ImportForecast = () => {
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
 
   const startProgress = () => {
-    if (intervalRef.current) return; // Evita múltiplos intervalos
+    if (intervalRef.current) return;
 
     setIsModalVisible(true);
     setPercent(0);
 
-    const duration = 3000; // 3 segundos
+    const duration = 3000;
     const steps = 100;
     const intervalTime = duration / steps;
 
