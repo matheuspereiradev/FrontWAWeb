@@ -1,39 +1,25 @@
-import LanguageSwitcher from '@/components/LanguageSwitcher';
 import {
-  ApartmentOutlined,
   BarChartOutlined,
   CheckCircleOutlined,
-  CheckSquareOutlined,
   CloseCircleOutlined,
-  CloseOutlined,
-  CloudUploadOutlined,
   ClusterOutlined,
   DatabaseOutlined,
   DeploymentUnitOutlined,
   FileAddOutlined,
-  FileSearchOutlined,
-  PlayCircleOutlined,
   RiseOutlined,
-  SafetyCertificateOutlined,
   SettingOutlined,
-  ShoppingCartOutlined,
-  StopOutlined,
-  SyncOutlined,
   TagOutlined,
   TagsOutlined,
   ToolOutlined
 } from '@ant-design/icons';
-import { Bar } from '@ant-design/plots';
-import { Button, Card, Col, Layout, Menu, Row, Space, Statistic, Table, Tooltip } from 'antd';
-import SubMenu from 'antd/es/menu/SubMenu';
-import { GetStaticPropsContext } from 'next';
-import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
+import { Button, Card, Col, Layout, Row, Space, Table } from 'antd';
 import { useTranslation } from 'react-i18next';
 
 import { Select, Progress, Typography } from 'antd';
 import { useState } from 'react';
 import { ExpandableConfig } from 'antd/es/table/interface';
 import dataSource from '../data/centerproduct.json';
+import Dashboard from '@/components/layouts/dashboard';
 
 const { Option } = Select;
 const { Text } = Typography;
@@ -247,223 +233,117 @@ const DashboardPage = () => {
 
 
   return (
-    <Layout style={{ minHeight: '100vh' }}>
-      <Sider breakpoint="lg" collapsedWidth="0" width={250} style={{ height: '100vh', overflowY: 'auto' }}>
-        <div
-          style={{
-            height: 64,
-            margin: 0,
-            padding: 3,
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center'
-          }}
-        >
-          <img
-            src="/wa-logo.png"
-            alt="Logo"
-            style={{ maxWidth: '100%', maxHeight: '100%' }}
-          />
+    <Dashboard title='Dashboard'>
+        <div>
+          <Card title="Espaço de trabalho">
+            <Space direction="vertical" size="small">
+              <Space>
+                <Button icon={<CheckCircleOutlined />}>Iniciar</Button>
+                <Button disabled icon={<CloseCircleOutlined />}>Finalizar</Button>
+              </Space>
+
+              <Space>
+                <Button icon={<CheckCircleOutlined />}>Aprovar</Button>
+                <Button icon={<CloseCircleOutlined />}>Desaprovar</Button>
+              </Space>
+            </Space>
+          </Card>
+
+          <Card title="Dados">
+            <Space direction="vertical" size="small">
+              <Space>
+                <Button icon={<DatabaseOutlined />}>Consumo Projetado</Button>
+                <Button icon={<SettingOutlined />}>Configuração de Buffer</Button>
+              </Space>
+              <Space>
+                <Button icon={<RiseOutlined />}>Picos e Faturamentos</Button>
+                <Button icon={<BarChartOutlined />}>Gráfico</Button>
+              </Space>
+            </Space>
+          </Card>
+
+          <Card title="Outras Funções">
+            <Space direction="vertical" size="small">
+              <Button icon={<FileAddOutlined />}>Adicionar Motivo</Button>
+              <Button icon={<TagsOutlined />}>Definir Etiqueta</Button>
+              <Button icon={<TagOutlined />}>Criar Etiqueta</Button>
+            </Space>
+          </Card>
+
+          <Card title="Distribuição Priorizada">
+            <Space direction="vertical" size="small">
+              <Button icon={<CheckCircleOutlined />}>Distribuição Eficiente</Button>
+              <Button icon={<DeploymentUnitOutlined />}>Carregar Alocação Priorizada</Button>
+              <Button icon={<CheckCircleOutlined />}>Sugerir Alocação Priorizada</Button>
+            </Space>
+          </Card>
+
+          <Card title="Grupo de Alocação">
+            <Space direction="vertical" size="small">
+              <Button icon={<ClusterOutlined />}>Adicionar </Button>
+              <Button icon={<ToolOutlined />}>Remover</Button>
+            </Space>
+          </Card>
         </div>
-        <Menu
-          mode="inline"
-          theme='dark'
-          defaultOpenKeys={['inventory-management']}
-          style={{ borderRight: 0 }}
-        >
-          <Menu.Item key="inventory-management" icon={<ApartmentOutlined />}>
-            {t('inventoryManagement')}
-          </Menu.Item>
 
-          <SubMenu key="stocks" icon={<DatabaseOutlined />} title={t('stocks')}>
-            <Menu.Item key="stocks-zaf">{t('stocks-zaf')}</Menu.Item>
-            <Menu.Item key="stocks-baf">{t('stocks-baf')}</Menu.Item>
-            <Menu.Item key="stocks-daf">{t('stocks-daf')}</Menu.Item>
-            <Menu.Item key="substitutions">{t('substitutions')}</Menu.Item>
-            <Menu.Item key="stocks-sequence-by-center">{t('stocks-sequence-by-center')}</Menu.Item>
-          </SubMenu>
+        <Row gutter={16} style={{ marginTop: 24 }}>
 
-          <SubMenu key="masters" icon={<SettingOutlined />} title={t('masters')}>
-            <Menu.Item key="masters-calculated-columns">{t('masters-calculated-columns')}</Menu.Item>
-            <Menu.Item key="masters-production-calendar">{t('masters-production-calendar')}</Menu.Item>
-            <Menu.Item key="masters-variability-factor">{t('masters-variability-factor')}</Menu.Item>
-            <Menu.Item key="masters-leadtime-factor">{t('masters-leadtime-factor')}</Menu.Item>
-            <Menu.Item key="masters-buffer-profile">{t('masters-buffer-profile')}</Menu.Item>
-            <Menu.Item key="masters-buffer-type">{t('masters-buffer-type')}</Menu.Item>
-            <Menu.Item key="masters-allocation-group">{t('masters-allocation-group')}</Menu.Item>
-            <Menu.Item key="masters-centers">{t('masters-centers')}</Menu.Item>
-          </SubMenu>
-
-
-          <SubMenu key="masters-orders" icon={<ShoppingCartOutlined />} title={t("orders")}>
-            <Menu.Item key="orders-fake">{t("orders-fake")}</Menu.Item>
-            <Menu.Item key="orders-transfer-tracking">{t("orders-transfer-tracking")}</Menu.Item>
-            <Menu.Item key="orders-production-orders">{t("orders-production-orders")}</Menu.Item>
-            <Menu.Item key="orders-purchase-orders">{t("orders-purchase-orders")}</Menu.Item>
-            <Menu.Item key="orders-buffer-profile">{t("orders-buffer-profile")}</Menu.Item>
-            <Menu.Item key="orders-buffer-type">{t("orders-buffer-type")}</Menu.Item>
-            <Menu.Item key="orders-allocation-group">{t("orders-allocation-group")}</Menu.Item>
-            <Menu.Item key="orders-centers">{t("orders-centers")}</Menu.Item>
-          </SubMenu>
-
-          <SubMenu key="continuous-improvement" icon={<SyncOutlined />} title={t("mastersContinuousImprovement")}>
-            <Menu.Item key="improvement-reasons-list">{t("improvement-reasons-list")}</Menu.Item>
-            <Menu.Item key="improvement-pending-reasons">{t("improvement-pending-reasons")}</Menu.Item>
-            <Menu.Item key="improvement-stock-reasons-chart">{t("improvement-stock-reasons-chart")}</Menu.Item>
-            <Menu.Item key="improvement-ddmrp-stock-management">{t("improvement-ddmrp-stock-management")}</Menu.Item>
-            <Menu.Item key="improvement-ddmrp-buffer-accumulated">{t("improvement-ddmrp-buffer-accumulated")}</Menu.Item>
-            <Menu.Item key="improvement-buffer-penetration-management">{t("improvement-buffer-penetration-management")}</Menu.Item>
-            <Menu.Item key="improvement-ddmrp-buffer-accumulated-analytics">{t("improvement-ddmrp-buffer-accumulated-analytics")}</Menu.Item>
-          </SubMenu>
-
-          <SubMenu key="security" icon={<SafetyCertificateOutlined />} title={t("mastersSecurity")}>
-            <Menu.Item key="security-profile">{t("security-profile")}</Menu.Item>
-            <Menu.Item key="security-users">{t("security-users")}</Menu.Item>
-            <Menu.Item key="security-change-password">{t("security-change-password")}</Menu.Item>
-            <Menu.Item key="security-centers">{t("security-centers")}</Menu.Item>
-            <Menu.Item key="security-importers">{t("security-importers")}</Menu.Item>
-          </SubMenu>
-
-          <SubMenu key="import" icon={<CloudUploadOutlined />} title={t("mastersImport")}>
-            <Menu.Item key="import-forecast">{t("import-forecast")}</Menu.Item>
-            <Menu.Item key="import-allocation-groups">{t("import-allocation-groups")}</Menu.Item>
-          </SubMenu>
-
-        </Menu>
-      </Sider>
-
-      <Layout>
-        <Header style={{ background: '#fff', padding: 0, paddingLeft: 24, display: 'flex', alignItems: 'center' }}>
-          <h2 style={{ flex: 1 }}>Dashboard</h2>
-          <LanguageSwitcher />
-        </Header>
-        <Content style={{ margin: '24px 16px 0' }}>
-
-          <div style={{ height: '100vh', overflowY: 'auto', width: '100%' }}>
-            <Card title="Espaço de trabalho">
-              <Space direction="vertical" size="small">
-                <Space>
-                  <Button icon={<CheckCircleOutlined />}>Iniciar</Button>
-                  <Button disabled icon={<CloseCircleOutlined />}>Finalizar</Button>
-                </Space>
-
-                <Space>
-                  <Button icon={<CheckCircleOutlined />}>Aprovar</Button>
-                  <Button icon={<CloseCircleOutlined />}>Desaprovar</Button>
-                </Space>
-              </Space>
+          <Col span={17}>
+            <Card>
+              <Table dataSource={dataSource} scroll={{ x: 1200 }} columns={mainColumns} pagination={false} expandable={expandable} />
             </Card>
-
-            <Card title="Dados">
-              <Space direction="vertical" size="small">
-                <Space>
-                  <Button icon={<DatabaseOutlined />}>Consumo Projetado</Button>
-                  <Button icon={<SettingOutlined />}>Configuração de Buffer</Button>
-                </Space>
-                <Space>
-                  <Button icon={<RiseOutlined />}>Picos e Faturamentos</Button>
-                  <Button icon={<BarChartOutlined />}>Gráfico</Button>
-                </Space>
-              </Space>
+          </Col>
+          <Col span={7}>
+            <Card style={{ width: '100%' }}>
+              <Table
+                dataSource={centers}
+                rowSelection={rowSelectionCenters}
+                columns={centerColumns}
+                size='small'
+                rowKey="id"
+                pagination={false}
+              />
             </Card>
+            <Card style={{ width: '100%' }}>
+              <div style={{ marginBottom: 16 }}>
+                <Text strong style={{ marginRight: 8 }}>Campo Resumo</Text>
+                <Select defaultValue="Vista Planejamento" style={{ width: 200 }}>
+                  <Option value="planning">Vista Planejamento</Option>
+                  <Option value="execution">Vista Execução</Option>
+                  <Option value="analitycs">Vista Analítica</Option>
+                </Select>
+              </div>
 
-            <Card title="Outras Funções">
-              <Space direction="vertical" size="small">
-                <Button icon={<FileAddOutlined />}>Adicionar Motivo</Button>
-                <Button icon={<TagsOutlined />}>Definir Etiqueta</Button>
-                <Button icon={<TagOutlined />}>Criar Etiqueta</Button>
-              </Space>
+              {data.map((item) => {
+                const porcentagem = total === 0 ? 0 : Math.round((item.valor / total) * 100);
+                return (
+                  <Row key={item.cor} align="middle" style={{ marginBottom: 8 }}>
+                    <Col span={4}>
+                      <Text style={{ color: item.corHex }}>{item.cor}</Text>
+                    </Col>
+                    <Col span={2}>
+                      <Text>{item.valor}</Text>
+                    </Col>
+                    <Col span={18}>
+                      <Progress
+                        percent={porcentagem}
+                        showInfo
+                        strokeColor={item.corHex}
+                        size="small"
+                      />
+                    </Col>
+                  </Row>
+                );
+              })}
+
+              <Row justify="end" style={{ marginTop: 16 }}>
+                <Text strong>Total {total}</Text>
+              </Row>
             </Card>
-
-            <Card title="Distribuição Priorizada">
-              <Space direction="vertical" size="small">
-                <Button icon={<CheckCircleOutlined />}>Distribuição Eficiente</Button>
-                <Button icon={<DeploymentUnitOutlined />}>Carregar Alocação Priorizada</Button>
-                <Button icon={<CheckCircleOutlined />}>Sugerir Alocação Priorizada</Button>
-              </Space>
-            </Card>
-
-            <Card title="Grupo de Alocação">
-              <Space direction="vertical" size="small">
-                <Button icon={<ClusterOutlined />}>Adicionar </Button>
-                <Button icon={<ToolOutlined />}>Remover</Button>
-              </Space>
-            </Card>
-          </div>
-
-          <Row gutter={16} style={{ marginTop: 24 }}>
-
-            <Col span={17}>
-              <Card>
-                <Table dataSource={dataSource} scroll={{ x: 1200 }} columns={mainColumns} pagination={false} expandable={expandable} />
-              </Card>
-            </Col>
-            <Col span={7}>
-              <Card style={{ width: '100%' }}>
-                <Table
-                  dataSource={centers}
-                  rowSelection={rowSelectionCenters}
-                  columns={centerColumns}
-                  size='small'
-                  rowKey="id"
-                  pagination={false}
-                />
-              </Card>
-              <Card style={{ width: '100%' }}>
-                <div style={{ marginBottom: 16 }}>
-                  <Text strong style={{ marginRight: 8 }}>Campo Resumo</Text>
-                  <Select defaultValue="Vista Planejamento" style={{ width: 200 }}>
-                    <Option value="planning">Vista Planejamento</Option>
-                    <Option value="execution">Vista Execução</Option>
-                    <Option value="analitycs">Vista Analítica</Option>
-                  </Select>
-                </div>
-
-                {data.map((item) => {
-                  const porcentagem = total === 0 ? 0 : Math.round((item.valor / total) * 100);
-                  return (
-                    <Row key={item.cor} align="middle" style={{ marginBottom: 8 }}>
-                      <Col span={4}>
-                        <Text style={{ color: item.corHex }}>{item.cor}</Text>
-                      </Col>
-                      <Col span={2}>
-                        <Text>{item.valor}</Text>
-                      </Col>
-                      <Col span={18}>
-                        <Progress
-                          percent={porcentagem}
-                          showInfo
-                          strokeColor={item.corHex}
-                          size="small"
-                        />
-                      </Col>
-                    </Row>
-                  );
-                })}
-
-                <Row justify="end" style={{ marginTop: 16 }}>
-                  <Text strong>Total {total}</Text>
-                </Row>
-              </Card>
-            </Col>
-          </Row>
-
-        </Content>
-        <Footer style={{ textAlign: 'center' }}>
-          ©2025 Criado com Ant Design
-        </Footer>
-      </div>
-    </Layout>
+          </Col>
+        </Row>
+    </Dashboard>
   );
 };
-
-export async function getStaticProps({ locale }: GetStaticPropsContext) {
-
-  return {
-    props: {
-      ...(await serverSideTranslations(locale ?? 'pt')),
-    },
-  };
-}
 
 export default DashboardPage;

@@ -3,7 +3,6 @@ import { Form, Input, Button, Checkbox, Card, message, Flex, Typography, Image }
 import { UserOutlined, LockOutlined } from '@ant-design/icons';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { useTranslation } from 'react-i18next';
-import LanguageController from '@/interfaces/LanguageSwitcher';
 import { Grid } from 'antd';
 
 const { useBreakpoint } = Grid;
