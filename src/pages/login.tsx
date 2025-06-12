@@ -1,9 +1,9 @@
-import React, { CSSProperties } from 'react';
-import { Form, Input, Button, Checkbox, Card, message, Flex, Typography, Image } from 'antd';
-import { UserOutlined, LockOutlined } from '@ant-design/icons';
+import { LockOutlined, UserOutlined } from '@ant-design/icons';
+import { Button, Card, Checkbox, Flex, Form, Grid, Image, Input, message, Typography } from 'antd';
+import { GetStaticPropsContext } from 'next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
+import React, { CSSProperties } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Grid } from 'antd';
 
 const { useBreakpoint } = Grid;
 
@@ -112,7 +112,7 @@ const Login: React.FC = () => {
     );
 };
 
-export async function getStaticProps({ locale }: LanguageController) {
+export async function getStaticProps({ locale }: GetStaticPropsContext) {
 
     return {
         props: {
