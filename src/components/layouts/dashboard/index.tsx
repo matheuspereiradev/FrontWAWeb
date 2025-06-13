@@ -3,29 +3,35 @@ import {
   ApartmentOutlined,
   CloudUploadOutlined,
   DatabaseOutlined,
+  DownOutlined,
   SafetyCertificateOutlined,
   SettingOutlined,
   ShoppingCartOutlined,
   SyncOutlined,
 } from '@ant-design/icons';
-import { Layout, Menu } from 'antd';
+import { Dropdown, Layout, Menu, Space } from 'antd';
 import SubMenu from 'antd/es/menu/SubMenu';
-import { useTranslation } from 'react-i18next';
+import { MenuUnfoldOutlined, MenuFoldOutlined } from '@ant-design/icons';
+
 
 import { Props } from '@/types/components/layouts/dashboard/props'
 import Link from 'next/link';
+import { useState } from 'react';
 
 const { Header, Content, Footer, Sider } = Layout;
 
 const Dashboard = ({ children, title }: Props) => {
-  const { t } = useTranslation('common');
+  const [collapsed, setCollapsed] = useState(true);
+
+
   return (
     <Layout style={{ minHeight: '100vh' }}>
-      <Sider breakpoint="lg" collapsedWidth="0" width={250} style={{ height: '100vh', overflowY: 'auto' }}>
+      <Sider breakpoint="lg" collapsedWidth="0" width={250} style={{ height: '100vh', overflowY: 'auto' }} collapsed={collapsed}
+        onCollapse={(value) => setCollapsed(value)}>
         <div
           style={{
             height: 64,
-            margin: 0,
+            margin: 1,
             padding: 3,
             display: 'flex',
             alignItems: 'center',
@@ -38,6 +44,16 @@ const Dashboard = ({ children, title }: Props) => {
             style={{ maxWidth: '100%', maxHeight: '100%' }}
           />
         </div>
+        <div
+          style={{
+            height: '4rem',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center'
+          }}
+        >
+          <LanguageSwitcher />
+        </div>
         <Menu
           mode="inline"
           theme='dark'
@@ -45,61 +61,60 @@ const Dashboard = ({ children, title }: Props) => {
           style={{ borderRight: 0 }}
         >
           <Menu.Item key="inventory-management" icon={<ApartmentOutlined />}>
-            {t('inventoryManagement')}
+            <Link href="/">Gerenciamento de estoques</Link>
           </Menu.Item>
 
-          <SubMenu key="stocks" icon={<DatabaseOutlined />} title={t('stocks')}>
-            <Menu.Item key="stocks-zaf"><Link href="/stock/zaf">{t('stocks-zaf')}</Link></Menu.Item>
-            <Menu.Item key="stocks-baf"><Link href="/stock/baf">{t('stocks-baf')}</Link></Menu.Item>
-            <Menu.Item key="stocks-daf"><Link href="/stock/daf">{t('stocks-daf')}</Link></Menu.Item>
-            <Menu.Item key="substitutions">{t('substitutions')}</Menu.Item>
-            <Menu.Item key="stocks-sequence-by-center">{t('stocks-sequence-by-center')}</Menu.Item>
+          <SubMenu key="stocks" icon={<DatabaseOutlined />} title={'Estoques'}>
+            <Menu.Item key="stocks-zaf"><Link href="/stock/zaf">ZAF</Link></Menu.Item>
+            <Menu.Item key="stocks-baf"><Link href="/stock/baf">BAF</Link></Menu.Item>
+            <Menu.Item key="stocks-daf"><Link href="/stock/daf">DAF</Link></Menu.Item>
+            <Menu.Item key="substitutions">Substituições</Menu.Item>
+            <Menu.Item key="stocks-sequence-by-center">Sequência por centro</Menu.Item>
           </SubMenu>
 
-          <SubMenu key="masters" icon={<SettingOutlined />} title={t('masters')}>
-            <Menu.Item key="masters-calculated-columns">{t('masters-calculated-columns')}</Menu.Item>
-            <Menu.Item key="masters-production-calendar">{t('masters-production-calendar')}</Menu.Item>
-            <Menu.Item key="masters-variability-factor">{t('masters-variability-factor')}</Menu.Item>
-            <Menu.Item key="masters-leadtime-factor">{t('masters-leadtime-factor')}</Menu.Item>
-            <Menu.Item key="masters-buffer-profile">{t('masters-buffer-profile')}</Menu.Item>
-            <Menu.Item key="masters-buffer-type">{t('masters-buffer-type')}</Menu.Item>
-            <Menu.Item key="masters-allocation-group">{t('masters-allocation-group')}</Menu.Item>
-            <Menu.Item key="masters-centers">{t('masters-centers')}</Menu.Item>
+          <SubMenu key="masters" icon={<SettingOutlined />} title="Mestres">
+            <Menu.Item key="masters-calculated-columns">Colunas calculadas</Menu.Item>
+            <Menu.Item key="masters-production-calendar">Calendário Produtivo</Menu.Item>
+            <Menu.Item key="masters-variability-factor">Fator de variabilidade (CV)</Menu.Item>
+            <Menu.Item key="masters-leadtime-factor">Fator de leadtime</Menu.Item>
+            <Menu.Item key="masters-buffer-profile">Perfil Buffer</Menu.Item>
+            <Menu.Item key="masters-buffer-type">Tipo Buffer</Menu.Item>
+            <Menu.Item key="masters-allocation-group">Grupo de Alocação</Menu.Item>
+            <Menu.Item key="masters-centers">Centros</Menu.Item>
+          </SubMenu>
+
+          <SubMenu key="masters-orders" icon={<ShoppingCartOutlined />} title="Pedidos">
+            <Menu.Item key="orders-fake">Pedidos Fictícios</Menu.Item>
+            <Menu.Item key="orders-transfer-tracking">Acompanhamento de transferências</Menu.Item>
+            <Menu.Item key="orders-production-orders">Ordens de produção</Menu.Item>
+            <Menu.Item key="orders-purchase-orders">Ordens de compra</Menu.Item>
+          </SubMenu>
+
+          <SubMenu key="continuous-improvement" icon={<SyncOutlined />} title="Melhoria Contínua">
+            <Menu.Item key="improvement-reasons-list">Lista Motivos</Menu.Item>
+            <Menu.Item key="improvement-pending-reasons">Motivos Pendentes</Menu.Item>
+            <Menu.Item key="improvement-stock-reasons-chart">Gráfico Motivos Estoques</Menu.Item>
+            <Menu.Item key="improvement-ddmrp-stock-management">Gestão de Estoque DDMRP</Menu.Item>
+            <Menu.Item key="improvement-ddmrp-buffer-accumulated">Acumulado de Buffer DDMRP</Menu.Item>
+            <Menu.Item key="improvement-buffer-penetration-management">Gestão de Penetração Buffer</Menu.Item>
+            <Menu.Item key="improvement-ddmrp-buffer-accumulated-analytics">Acumulado Buffers DDMRP Analítica</Menu.Item>
           </SubMenu>
 
 
-          <SubMenu key="masters-orders" icon={<ShoppingCartOutlined />} title={t("orders")}>
-            <Menu.Item key="orders-fake">{t("orders-fake")}</Menu.Item>
-            <Menu.Item key="orders-transfer-tracking">{t("orders-transfer-tracking")}</Menu.Item>
-            <Menu.Item key="orders-production-orders">{t("orders-production-orders")}</Menu.Item>
-            <Menu.Item key="orders-purchase-orders">{t("orders-purchase-orders")}</Menu.Item>
-            <Menu.Item key="orders-buffer-profile">{t("orders-buffer-profile")}</Menu.Item>
-            <Menu.Item key="orders-buffer-type">{t("orders-buffer-type")}</Menu.Item>
-            <Menu.Item key="orders-allocation-group">{t("orders-allocation-group")}</Menu.Item>
-            <Menu.Item key="orders-centers">{t("orders-centers")}</Menu.Item>
+          <SubMenu key="security" icon={<SafetyCertificateOutlined />} title="Segurança">
+            <Menu.Item key="security-profile">Perfil</Menu.Item>
+            <Menu.Item key="security-users">Usuários</Menu.Item>
+            <Menu.Item key="security-change-password">Alterar Senha</Menu.Item>
+            <Menu.Item key="security-centers">Segurança Centros</Menu.Item>
+            <Menu.Item key="security-importers">Segurança Importadores</Menu.Item>
           </SubMenu>
 
-          <SubMenu key="continuous-improvement" icon={<SyncOutlined />} title={t("mastersContinuousImprovement")}>
-            <Menu.Item key="improvement-reasons-list">{t("improvement-reasons-list")}</Menu.Item>
-            <Menu.Item key="improvement-pending-reasons">{t("improvement-pending-reasons")}</Menu.Item>
-            <Menu.Item key="improvement-stock-reasons-chart">{t("improvement-stock-reasons-chart")}</Menu.Item>
-            <Menu.Item key="improvement-ddmrp-stock-management">{t("improvement-ddmrp-stock-management")}</Menu.Item>
-            <Menu.Item key="improvement-ddmrp-buffer-accumulated">{t("improvement-ddmrp-buffer-accumulated")}</Menu.Item>
-            <Menu.Item key="improvement-buffer-penetration-management">{t("improvement-buffer-penetration-management")}</Menu.Item>
-            <Menu.Item key="improvement-ddmrp-buffer-accumulated-analytics">{t("improvement-ddmrp-buffer-accumulated-analytics")}</Menu.Item>
-          </SubMenu>
 
-          <SubMenu key="security" icon={<SafetyCertificateOutlined />} title={t("mastersSecurity")}>
-            <Menu.Item key="security-profile">{t("security-profile")}</Menu.Item>
-            <Menu.Item key="security-users">{t("security-users")}</Menu.Item>
-            <Menu.Item key="security-change-password">{t("security-change-password")}</Menu.Item>
-            <Menu.Item key="security-centers">{t("security-centers")}</Menu.Item>
-            <Menu.Item key="security-importers">{t("security-importers")}</Menu.Item>
-          </SubMenu>
-
-          <SubMenu key="import" icon={<CloudUploadOutlined />} title={t("mastersImport")}>
-            <Menu.Item key="import-forecast"><Link href="/import/forecast">{t("import-forecast")}</Link></Menu.Item>
-            <Menu.Item key="import-allocation-groups">{t("import-allocation-groups")}</Menu.Item>
+          <SubMenu key="import" icon={<CloudUploadOutlined />} title="Importação">
+            <Menu.Item key="import-forecast">
+              <Link href="/import/forecast">Importar forecast</Link>
+            </Menu.Item>
+            <Menu.Item key="import-allocation-groups">Importar Grupos de Alocação</Menu.Item>
           </SubMenu>
 
         </Menu>
@@ -108,12 +123,25 @@ const Dashboard = ({ children, title }: Props) => {
       <div style={{ height: '100vh', overflowY: 'auto', width: '100%' }}>
         <Header style={{
           position: 'sticky', top: '0', zIndex: '999',
-          background: '#fff', padding: 0, paddingLeft: 24,
+          background: '#fff', padding: 0, paddingLeft: 35,
           display: 'flex', alignItems: 'center',
           boxShadow: '0px 5px 10px -10px #000000'
         }}>
+          {collapsed ? (
+            <MenuUnfoldOutlined
+              className="trigger"
+              onClick={() => setCollapsed(false)}
+              style={{ fontSize: '20px', cursor: 'pointer', marginRight: 16 }}
+            />
+          ) : (
+            <MenuFoldOutlined
+              className="trigger"
+              onClick={() => setCollapsed(true)}
+              style={{ fontSize: '20px', cursor: 'pointer', marginRight: 16 }}
+            />
+          )}
           <h2 style={{ flex: 1 }}>{title}</h2>
-          <LanguageSwitcher />
+
         </Header>
         <Layout>
           <Content style={{ margin: '24px 16px 0' }}>

@@ -1,0 +1,27 @@
+[
+    {
+        "name": "São Paulo",
+        "id": "1",
+        "code": "SP"
+    },
+    {
+        "name": "Salvador",
+        "id": "2",
+        "code": "BA"
+    },
+    {
+        "name": "Fortaleza",
+        "id": "3",
+        "code": "CE"
+    },
+    {
+        "name": "Brasília",
+        "id": "4",
+        "code": "DF"
+    },
+    {
+        "name": "Rio de Janeiro",
+        "id": "5",
+        "code": "RJ"
+    }
+]

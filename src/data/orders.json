@@ -1,0 +1,72 @@
+[
+  {
+    "NumOrdem": 37170,
+    "Referencia": "18-1000",
+    "TipoObservacao": "OC",
+    "Fornecedor": "PLASTIND COM. E IND. LTDA",
+    "DataCriacao": "24/09/2024",
+    "DataEntrega": "01/11/2024",
+    "QtdOriginal": 42000.00,
+    "QtdFaltante": 15000.0000,
+    "QtdTransito": 12000.0000,
+    "BufferTempo": 12.45,
+    "BufferExecucao": 28.57,
+    "CorBufferExecucao": "Amarelo"
+  },
+  {
+    "NumOrdem": 37171,
+    "Referencia": "18-1001",
+    "TipoObservacao": "OC",
+    "Fornecedor": "INDÚSTRIA METAIS RJ",
+    "DataCriacao": "25/09/2024",
+    "DataEntrega": "05/11/2024",
+    "QtdOriginal": 50500.00,
+    "QtdFaltante": 50500.0000,
+    "QtdTransito": 0.0000,
+    "BufferTempo": 77.10,
+    "BufferExecucao": 0.00,
+    "CorBufferExecucao": "Vermelho"
+  },
+  {
+    "NumOrdem": 37172,
+    "Referencia": "18-1002",
+    "TipoObservacao": "OC",
+    "Fornecedor": "FABRICA DE PARAFUSOS ABC",
+    "DataCriacao": "20/09/2024",
+    "DataEntrega": "28/10/2024",
+    "QtdOriginal": 18750.00,
+    "QtdFaltante": 3750.0000,
+    "QtdTransito": 18750.0000,
+    "BufferTempo": 30.00,
+    "BufferExecucao": 80.00,
+    "CorBufferExecucao": "Verde"
+  },
+  {
+    "NumOrdem": 37173,
+    "Referencia": "18-1003",
+    "TipoObservacao": "OC",
+    "Fornecedor": "SUPRIMENTOS GERAIS LTDA",
+    "DataCriacao": "22/09/2024",
+    "DataEntrega": "30/10/2024",
+    "QtdOriginal": 30000.00,
+    "QtdFaltante": 10000.0000,
+    "QtdTransito": 5000.0000,
+    "BufferTempo": 42.75,
+    "BufferExecucao": 66.67,
+    "CorBufferExecucao": "Verde"
+  },
+  {
+    "NumOrdem": 37174,
+    "Referencia": "18-1004",
+    "TipoObservacao": "OC",
+    "Fornecedor": "DISTRIBUIDORA NACIONAL",
+    "DataCriacao": "21/09/2024",
+    "DataEntrega": "29/10/2024",
+    "QtdOriginal": 25000.00,
+    "QtdFaltante": 0.0000,
+    "QtdTransito": 25000.0000,
+    "BufferTempo": 60.00,
+    "BufferExecucao": 100.00,
+    "CorBufferExecucao": "Azul"
+  }
+]

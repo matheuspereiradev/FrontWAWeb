@@ -5,19 +5,11 @@ import { useTranslation } from 'react-i18next';
 import Dashboard from '@/components/layouts/dashboard';
 import { AutoComplete, AutoCompleteProps, Button, Card, Checkbox, Col, DatePicker, Flex, Form, InputNumber, Radio, RadioChangeEvent, Row, Select } from 'antd';
 import { useState } from 'react';
-
-const centers = [
-    { name: "São Paulo", id: "1", code: "SP" },
-    { name: "Salvador", id: "2", code: "BA" },
-    { name: "Fortaleza", id: "3", code: "CE" },
-    { name: "Brasília", id: "4", code: "DF" },
-    { name: "Rio de Janeiro", id: "5", code: "RJ" },
-];
+import centers from '../../../data/centers.json'
 
 const { RangePicker } = DatePicker;
 
 const DafPage = () => {
-    const { t } = useTranslation('common');
 
     const [options, setOptions] = useState<AutoCompleteProps['options']>([]);
     const [radioValue, setRadioValue] = useState(1);
@@ -46,7 +38,7 @@ const DafPage = () => {
     };
 
     return (
-        <Dashboard title={t('stocks-daf')}>
+        <Dashboard title={'DAF'}>
             <Card>
                 <Form layout='vertical'>
                     <Row gutter={16}>
@@ -92,7 +84,7 @@ const DafPage = () => {
                         </Col>
                     </Row>
                     <Flex style={{ marginBottom: 24 }} gap='middle'>
-                        <Card title={t('stocks-daf')} style={{ width: '100%' }}>
+                        <Card title={'DAF'} style={{ width: '100%' }}>
                             <Flex gap='middle'>
                                 <Form.Item label="Tipo">
                                     <Radio.Group

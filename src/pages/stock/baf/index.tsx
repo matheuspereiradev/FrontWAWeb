@@ -6,14 +6,7 @@ import Dashboard from '@/components/layouts/dashboard';
 import { AutoComplete, AutoCompleteProps, Button, Card, Checkbox, Col, DatePicker, Flex, Form, InputNumber, Radio, RadioChangeEvent, Row, Select } from 'antd';
 import { useState } from 'react';
 import TextArea from 'antd/es/input/TextArea';
-
-const centers = [
-  { name: "São Paulo", id: "1", code: "SP" },
-  { name: "Salvador", id: "2", code: "BA" },
-  { name: "Fortaleza", id: "3", code: "CE" },
-  { name: "Brasília", id: "4", code: "DF" },
-  { name: "Rio de Janeiro", id: "5", code: "RJ" },
-];
+import centers from '../../../data/centers.json'
 
 const { RangePicker } = DatePicker;
 
@@ -47,7 +40,7 @@ const BafPage = () => {
   };
 
   return (
-    <Dashboard title={t('stocks-baf')}>
+    <Dashboard title={'BAF'}>
       <Card>
         <Form layout='vertical'>
           <Row gutter={16}>

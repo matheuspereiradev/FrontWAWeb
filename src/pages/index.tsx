@@ -1,4 +1,7 @@
 import {
+  AreaChartOutlined,
+  ArrowLeftOutlined,
+  ArrowRightOutlined,
   BarChartOutlined,
   CalendarOutlined,
   CheckCircleOutlined,
@@ -8,17 +11,26 @@ import {
   DeploymentUnitOutlined,
   DownOutlined,
   FileAddOutlined,
+  FileSearchOutlined,
   GroupOutlined,
+  HomeOutlined,
+  InboxOutlined,
+  ReconciliationOutlined,
   RiseOutlined,
   SettingOutlined,
+  ShopOutlined,
+  ShoppingOutlined,
   TagOutlined,
   TagsOutlined,
   ToolOutlined
 } from '@ant-design/icons';
-import { Button, Card, Col, Dropdown, Layout, Row, Space, Table } from 'antd';
+import { Button, Card, Col, Dropdown, Layout, Row, Space, Table, Tabs, Tag } from 'antd';
 import { GetStaticPropsContext } from 'next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
-import { useTranslation } from 'react-i18next';
+import styles from '../styles/admin-buffer.module.css';
+import centers from '../data/centers.json';
+import orders from '../data/orders.json';
+import sales from '../data/sales.json';
 
 import { Select, Progress, Typography } from 'antd';
 import { useState } from 'react';
@@ -37,19 +49,10 @@ const data = [
   { cor: 'Azul', valor: 9, corHex: '#0000ff' },
 ];
 
-const centers = [
-  { name: "São Paulo", id: "1", code: "SP" },
-  { name: "Salvador", id: "2", code: "BA" },
-  { name: "Fortaleza", id: "3", code: "CE" },
-  { name: "Brasília", id: "4", code: "DF" },
-  { name: "Rio de Janeiro", id: "5", code: "RJ" },
-];
 
 const total = data.reduce((acc, item) => acc + item.valor, 0);
 
 const DashboardPage = () => {
-
-  const { t } = useTranslation('common');
 
   const [selectedCentersKeys, setSelectedCentersKeys] = useState<React.Key[]>([]);
 
@@ -59,18 +62,21 @@ const DashboardPage = () => {
       setSelectedCentersKeys(selectedKeys);
     },
   };
+  const [selectedMainTableKeys, setSelectedMainTableKeys] = useState<React.Key[]>([]);
 
-  const generateTextFilter = (dataIndex: string) => ({
-    filters: [],
-    onFilter: (value: string, record: any) =>
-      record[dataIndex]?.toString().toLowerCase().includes(value.toLowerCase()),
-    filterSearch: true,
-  });
+  const rowSelectionMainTable = {
+    selectedRowKeys: selectedMainTableKeys,
+    onChange: (selectedKeys: React.Key[]) => {
+      setSelectedMainTableKeys(selectedKeys);
+    },
+  };
+
 
   const mainColumns: ColumnsType<any> = [
     {
       title: 'Ações',
       key: 'action',
+      fixed: 'left',
       sorter: false,
       render: () => (
         <Space size="middle">
@@ -242,6 +248,36 @@ const DashboardPage = () => {
       sorter: (a: any, b: any) => a.Unidad.localeCompare(b.Unidad),
     },
     {
+      title: 'Buffer Fluxo Líquido',
+      dataIndex: 'netflowBuffer',
+      key: 'netflowBuffer',
+      render: (value: number) => `${value}%`,
+      onCell: (record: any) => {
+        const value = record.netflowBuffer;
+
+        let backgroundColor = '';
+
+        if (value > 100) {
+          backgroundColor = 'blue';
+        } else if (value > 70) {
+          backgroundColor = 'green';
+        } else if (value > 40) {
+          backgroundColor = 'yellow';
+        } else if (value >= 1) {
+          backgroundColor = 'red';
+        } else {
+          backgroundColor = 'black';
+        }
+
+        return {
+          style: {
+            backgroundColor,
+            color: backgroundColor === 'black' || backgroundColor === 'blue' ? 'white' : 'black', // contraste
+          },
+        };
+      }
+    },
+    {
       title: 'Linha',
       dataIndex: 'Linea',
       key: 'Linea',
@@ -254,9 +290,17 @@ const DashboardPage = () => {
       sorter: (a: any, b: any) => a.SubLinea.localeCompare(b.SubLinea),
     },
     {
-      title: 'Estoque',
+      title: 'Estoque On Hand',
       dataIndex: 'Stock',
       key: 'Stock',
+      onCell: () => {
+        return {
+          style: {
+            backgroundColor: 'PaleTurquoise',
+          },
+        };
+      },
+
       sorter: (a: any, b: any) => a.Stock - b.Stock,
     },
     {
@@ -278,7 +322,21 @@ const DashboardPage = () => {
       sorter: (a: any, b: any) => a.ADI - b.ADI,
     },
     {
-      title: 'Pedido',
+      title: 'Qtd otimizada',
+      dataIndex: 'PedidoARealizar',
+      key: 'PedidoARealizar',
+      onCell: () => {
+        return {
+          style: {
+            backgroundColor: 'Pink',
+          },
+        };
+      },
+
+      sorter: (a: any, b: any) => a.PedidoARealizar - b.PedidoARealizar,
+    },
+    {
+      title: 'Quantidade Sugerida',
       dataIndex: 'CantidadAPedir',
       key: 'CantidadAPedir',
       sorter: (a: any, b: any) => a.CantidadAPedir - b.CantidadAPedir,
@@ -294,6 +352,45 @@ const DashboardPage = () => {
       dataIndex: 'CantEmpaque',
       key: 'CantEmpaque',
       sorter: (a: any, b: any) => a.CantEmpaque - b.CantEmpaque,
+    },
+    {
+      title: 'TOR',
+      dataIndex: 'TOR',
+      key: 'TOR',
+      onCell: () => {
+        return {
+          style: {
+            backgroundColor: 'Red',
+          },
+        };
+      },
+      sorter: (a: any, b: any) => a.TOR - b.TOR,
+    },
+    {
+      title: 'TOY',
+      dataIndex: 'TOY',
+      key: 'TOY',
+      onCell: () => {
+        return {
+          style: {
+            backgroundColor: 'Yellow',
+          },
+        };
+      },
+      sorter: (a: any, b: any) => a.TOY - b.TOY,
+    },
+    {
+      title: 'TOG',
+      dataIndex: 'TOG',
+      key: 'TOG',
+      onCell: () => {
+        return {
+          style: {
+            backgroundColor: 'Green',
+          },
+        };
+      },
+      sorter: (a: any, b: any) => a.TOR - b.TOR,
     },
     {
       title: 'CampoAd1',
@@ -328,17 +425,115 @@ const DashboardPage = () => {
       key: 'code',
     },
   ];
-  const defaultExpandable: ExpandableConfig<any> = {
-    expandedRowRender: (record: any) => <p>{record.description}</p>,
-  };
 
-  const [expandable, setExpandable] = useState<ExpandableConfig<any>>(defaultExpandable);
+  const ordersColumns = [
+    {
+      title: 'Num Ordem',
+      dataIndex: 'NumOrdem',
+      key: 'NumOrdem',
+    },
+    {
+      title: 'Referência',
+      dataIndex: 'Referencia',
+      key: 'Referencia',
+    },
+    {
+      title: 'Tipo (Observação)',
+      dataIndex: 'TipoObservacao',
+      key: 'TipoObservacao',
+    },
+    {
+      title: 'Fornecedor',
+      dataIndex: 'Fornecedor',
+      key: 'Fornecedor',
+    },
+    {
+      title: 'Data Criação',
+      dataIndex: 'DataCriacao',
+      key: 'DataCriacao',
+    },
+    {
+      title: 'Data Entrega',
+      dataIndex: 'DataEntrega',
+      key: 'DataEntrega',
+    },
+    {
+      title: 'Qtd Original',
+      dataIndex: 'QtdOriginal',
+      key: 'QtdOriginal',
+    },
+    {
+      title: 'Qtd Faltante',
+      dataIndex: 'QtdFaltante',
+      key: 'QtdFaltante',
+    },
+    {
+      title: 'Qtd Trânsito',
+      dataIndex: 'QtdTransito',
+      key: 'QtdTransito',
+    },
+    {
+      title: 'Buffer Tempo',
+      dataIndex: 'BufferTempo',
+      key: 'BufferTempo',
+      render: (value: number) => `${value.toFixed(2)}%`,
+      onCell: (record: any) => {
+        const value = record.BufferTempo;
 
-  const handleExpandChange = (enable: boolean) => {
-    //@ts-ignore
-    setExpandable(enable ? defaultExpandable : undefined);
-  };
+        let backgroundColor = '';
 
+        if (value > 100) {
+          backgroundColor = 'blue';
+        } else if (value > 70) {
+          backgroundColor = 'green';
+        } else if (value > 40) {
+          backgroundColor = 'yellow';
+        } else if (value >= 1) {
+          backgroundColor = 'red';
+        } else {
+          backgroundColor = 'black';
+        }
+
+        return {
+          style: {
+            backgroundColor,
+            color: backgroundColor === 'black' || backgroundColor === 'blue' ? 'white' : 'black',
+          },
+        };
+      }
+    },
+    {
+      title: 'Buffer Execução',
+      dataIndex: 'BufferExecucao',
+      key: 'BufferExecucao',
+      render: (value: number) => `${value.toFixed(2)}%`,
+      onCell: (record: any) => {
+        const value = record.BufferExecucao;
+
+        let backgroundColor = '';
+
+        if (value > 100) {
+          backgroundColor = 'blue';
+        } else if (value > 70) {
+          backgroundColor = 'green';
+        } else if (value > 40) {
+          backgroundColor = 'yellow';
+        } else if (value >= 1) {
+          backgroundColor = 'red';
+        } else {
+          backgroundColor = 'black';
+        }
+
+        return {
+          style: {
+            backgroundColor,
+            color: backgroundColor === 'black' || backgroundColor === 'blue' ? 'white' : 'black',
+          },
+        };
+      }
+
+    }
+  ];
 
   return (
     <Dashboard title='Dashboard'>
@@ -377,7 +572,76 @@ const DashboardPage = () => {
 
         <Col span={17}>
           <Card>
-            <Table dataSource={dataSource} scroll={{ x: 1200 }} columns={mainColumns} pagination={false} expandable={expandable} />
+            <Table
+              dataSource={dataSource}
+              scroll={{ x: 'max-content' }}
+              columns={mainColumns}
+              rowKey="IdProductoBodega"
+              pagination={false}
+              rowSelection={rowSelectionMainTable}
+              size='middle'
+              expandable={{
+                expandedRowRender: (record) => <Tabs
+                  defaultActiveKey="2"
+                  type="card"
+                  items={[
+                    {
+                      key: '1',
+                      label: `Entradas`,
+                      children: <Table
+                        dataSource={orders}
+                        columns={ordersColumns}
+                        size='small'
+                        pagination={false}
+                      />,
+                      icon: <ArrowLeftOutlined />,
+                    },
+                    {
+                      key: '2',
+                      label: `Saídas`,
+                      children: <Table
+                        dataSource={sales}
+                        columns={ordersColumns}
+                        size='small'
+                        pagination={false}
+                      />,
+                      icon: <ArrowRightOutlined />,
+                    },
+                    {
+                      key: '3',
+                      label: `Centros`,
+                      children: `Centros`,
+                      icon: <ShopOutlined />,
+                    },
+                    {
+                      key: '4',
+                      label: `Buffer DDMRP`,
+                      children: `Buffer DDMRP`,
+                      icon: <FileSearchOutlined />,
+                    },
+                    {
+                      key: '5',
+                      label: `DAF`,
+                      children: `DAF`,
+                      icon: <ReconciliationOutlined />,
+                    },
+                    {
+                      key: '6',
+                      label: `ZAF`,
+                      children: `ZAF`,
+                      icon: <ReconciliationOutlined />,
+                    },
+                    {
+                      key: '7',
+                      label: `Pedidos Ficticios`,
+                      children: `Pedidos Ficticios`,
+                      icon: <ShoppingOutlined />,
+                    },
+                  ]}
+                />
+              }}
+              className={styles['custom-table']}
+            />
           </Card>
         </Col>
         <Col span={7}>
@@ -433,13 +697,5 @@ const DashboardPage = () => {
   );
 };
 
-export async function getStaticProps({ locale }: GetStaticPropsContext) {
-
-  return {
-    props: {
-      ...(await serverSideTranslations(locale ?? 'pt', ['common'])),
-    },
-  };
-}
 
 export default DashboardPage;

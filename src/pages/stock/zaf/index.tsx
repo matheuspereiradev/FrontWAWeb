@@ -5,14 +5,7 @@ import { useTranslation } from 'react-i18next';
 import Dashboard from '@/components/layouts/dashboard';
 import { AutoComplete, AutoCompleteProps, Button, Card, Col, DatePicker, Flex, Form, InputNumber, Radio, RadioChangeEvent, Row, Select } from 'antd';
 import { useState } from 'react';
-
-const centers = [
-  { name: "São Paulo", id: "1", code: "SP" },
-  { name: "Salvador", id: "2", code: "BA" },
-  { name: "Fortaleza", id: "3", code: "CE" },
-  { name: "Brasília", id: "4", code: "DF" },
-  { name: "Rio de Janeiro", id: "5", code: "RJ" },
-];
+import centers from '../../../data/centers.json'
 
 const { RangePicker } = DatePicker;
 
@@ -46,7 +39,7 @@ const ZafPage = () => {
   };
 
   return (
-    <Dashboard title={t('stocks-zaf')}>
+    <Dashboard title={'ZAF'}>
       <Card>
         <Form layout='vertical'>
           <Row gutter={16}>
@@ -87,7 +80,7 @@ const ZafPage = () => {
             </Col>
           </Row>
           <Flex justify='center' style={{ marginBottom: 24 }}>
-            <Card title={t('stocks-zaf')}>
+            <Card title={'ZAF'}>
               <Flex gap='middle'>
                 <Form.Item label="Tipo">
                   <Radio.Group
