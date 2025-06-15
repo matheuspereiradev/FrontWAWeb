@@ -52,7 +52,7 @@ const Dashboard = ({ children, title }: Props) => {
             <Menu.Item key="stocks-zaf"><Link href="/stock/zaf">{t('stocks-zaf')}</Link></Menu.Item>
             <Menu.Item key="stocks-baf"><Link href="/stock/baf">{t('stocks-baf')}</Link></Menu.Item>
             <Menu.Item key="stocks-daf"><Link href="/stock/daf">{t('stocks-daf')}</Link></Menu.Item>
-            <Menu.Item key="substitutions">{t('substitutions')}</Menu.Item>
+            <Menu.Item key="substitutions"><Link href="/stock/substitutions">{t('substitutions')}</Link></Menu.Item>
             <Menu.Item key="stocks-sequence-by-center">{t('stocks-sequence-by-center')}</Menu.Item>
           </SubMenu>
 
@@ -63,13 +63,13 @@ const Dashboard = ({ children, title }: Props) => {
             <Menu.Item key="masters-leadtime-factor">{t('masters-leadtime-factor')}</Menu.Item>
             <Menu.Item key="masters-buffer-profile">{t('masters-buffer-profile')}</Menu.Item>
             <Menu.Item key="masters-buffer-type">{t('masters-buffer-type')}</Menu.Item>
-            <Menu.Item key="masters-allocation-group">{t('masters-allocation-group')}</Menu.Item>
+            <Menu.Item key="masters-allocation-group"><Link href="/masters/alocation-groups">{t('masters-allocation-group')}</Link></Menu.Item>
             <Menu.Item key="masters-centers">{t('masters-centers')}</Menu.Item>
           </SubMenu>
 
 
           <SubMenu key="masters-orders" icon={<ShoppingCartOutlined />} title={t("orders")}>
-            <Menu.Item key="orders-fake">{t("orders-fake")}</Menu.Item>
+            <Menu.Item key="orders-fake"><Link href="/orders/orders-fake">{t("orders-fake")}</Link></Menu.Item>
             <Menu.Item key="orders-transfer-tracking">{t("orders-transfer-tracking")}</Menu.Item>
             <Menu.Item key="orders-production-orders">{t("orders-production-orders")}</Menu.Item>
             <Menu.Item key="orders-purchase-orders">{t("orders-purchase-orders")}</Menu.Item>

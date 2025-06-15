@@ -1,21 +1,10 @@
 import { GetStaticPropsContext } from 'next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
-import { useTranslation } from 'react-i18next';
 
 import Dashboard from '@/components/layouts/dashboard';
-import { AutoComplete, AutoCompleteProps, Button, Card, Col, DatePicker, Flex, Form, Input, InputNumber, Radio, RadioChangeEvent, Row, Select } from 'antd';
-import { useState } from 'react';
-import TextArea from 'antd/es/input/TextArea';
+import { Button, Card, Col, Flex, Form, Input, InputNumber, Row } from 'antd';
 
-const centers = [
-  { name: "São Paulo", id: "1", code: "SP" },
-  { name: "Salvador", id: "2", code: "BA" },
-  { name: "Fortaleza", id: "3", code: "CE" },
-  { name: "Brasília", id: "4", code: "DF" },
-  { name: "Rio de Janeiro", id: "5", code: "RJ" },
-];
-
-const OrdersPage = () => {
+const AlocationGroups = () => {
   return (
     <Dashboard title={'Grupos de alocação'}>
       <Card>
@@ -64,4 +53,4 @@ export async function getStaticProps({ locale }: GetStaticPropsContext) {
   };
 }
 
-export default OrdersPage;
+export default AlocationGroups;
