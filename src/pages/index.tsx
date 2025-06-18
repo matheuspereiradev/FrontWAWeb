@@ -15,6 +15,10 @@ import {
   GroupOutlined,
   HomeOutlined,
   InboxOutlined,
+  LaptopOutlined,
+  MenuFoldOutlined,
+  MenuUnfoldOutlined,
+  PlusOutlined,
   ReconciliationOutlined,
   RiseOutlined,
   SettingOutlined,
@@ -37,6 +41,7 @@ import { useState } from 'react';
 import { ColumnsType, ExpandableConfig } from 'antd/es/table/interface';
 import dataSource from '../data/centerproduct.json';
 import Dashboard from '@/components/layouts/dashboard';
+import Link from 'next/link';
 
 const { Option } = Select;
 const { Text } = Typography;
@@ -55,6 +60,7 @@ const total = data.reduce((acc, item) => acc + item.valor, 0);
 const DashboardPage = () => {
 
   const [selectedCentersKeys, setSelectedCentersKeys] = useState<React.Key[]>([]);
+  const [showSidebar, setShowSidebar] = useState(true);
 
   const rowSelectionCenters = {
     selectedRowKeys: selectedCentersKeys,
@@ -537,41 +543,43 @@ const DashboardPage = () => {
 
   return (
     <Dashboard title='Dashboard'>
-      <div style={{ display: 'flex', padding: 12, gap: 24, backgroundColor: 'white', overflowX: 'auto' }}>
-        <Card title="Espaço de trabalho">
-          <Space direction="vertical" size="small">
-            <Space>
-              <Button icon={<CheckCircleOutlined />}>Iniciar</Button>
-              <Button disabled icon={<CloseCircleOutlined />}>Finalizar</Button>
-            </Space>
-
-            <Space>
-              <Button icon={<CheckCircleOutlined />}>Aprovar</Button>
-              <Button icon={<CloseCircleOutlined />}>Desaprovar</Button>
-            </Space>
-          </Space>
-        </Card>
-
-
-        <Card title="Distribuição Priorizada">
-          <Space direction="vertical" size="small">
-            <Button icon={<CheckCircleOutlined />}>Distribuição Eficiente</Button>
-            <Button icon={<DeploymentUnitOutlined />}>Carregar Alocação Priorizada</Button>
-            <Button icon={<CheckCircleOutlined />}>Sugerir Alocação Priorizada</Button>
-          </Space>
-        </Card>
-
-        <Card title="Outras Funções">
-          <Space direction="vertical" size="small">
-            <Button icon={<TagOutlined />}>Criar Etiqueta</Button>
-          </Space>
-        </Card>
-      </div>
+      {/* <div style={{ display: 'flex', padding: 12, gap: 24, backgroundColor: 'white', overflowX: 'auto' }}>
+        
+      </div> */}
 
       <Row gutter={16} style={{ marginTop: 24 }}>
-
         <Col span={17}>
           <Card>
+            <Space direction="horizontal" size="small">
+              <Card title="Espaço de trabalho">
+                <Space direction="vertical" size="small">
+                  <Space>
+                    <Button icon={<CheckCircleOutlined />}>Iniciar</Button>
+                    <Button disabled icon={<CloseCircleOutlined />}>Finalizar</Button>
+                  </Space>
+
+                  <Space>
+                    <Button icon={<CheckCircleOutlined />}>Aprovar</Button>
+                    <Button icon={<CloseCircleOutlined />}>Desaprovar</Button>
+                  </Space>
+                </Space>
+              </Card>
+
+
+              <Card title="Distribuição Priorizada">
+                <Space direction="vertical" size="small">
+                  <Button icon={<CheckCircleOutlined />}>Distribuição Eficiente</Button>
+                  <Button icon={<DeploymentUnitOutlined />}>Carregar Alocação Priorizada</Button>
+                  <Button icon={<CheckCircleOutlined />}>Sugerir Alocação Priorizada</Button>
+                </Space>
+              </Card>
+
+              <Card title="Outras Funções">
+                <Space direction="vertical" size="small">
+                  <Button icon={<TagOutlined />}>Criar Etiqueta</Button>
+                </Space>
+              </Card>
+            </Space>
             <Table
               dataSource={dataSource}
               scroll={{ x: 'max-content' }}
@@ -645,6 +653,7 @@ const DashboardPage = () => {
           </Card>
         </Col>
         <Col span={7}>
+
           <Card style={{ width: '100%' }}>
             <Table
               dataSource={centers}
@@ -693,7 +702,7 @@ const DashboardPage = () => {
           </Card>
         </Col>
       </Row>
-    </Dashboard>
+    </Dashboard >
   );
 };
 
