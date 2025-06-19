@@ -1,10 +1,12 @@
-// lib/api.ts
+import { parseCookies } from 'nookies';
+import { GetServerSidePropsContext, GetStaticPropsContext } from 'next';
+
 export async function apiFetch<T>(
   endpoint: string,
   options: RequestInit = {},
   token?: string
 ): Promise<T> {
-  const BASE_URL = process.env.API_URL || 'https://api.seuservidor.com';
+  const BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5123/api';
 
   const headers: Record<string, string> = {
     'Content-Type': 'application/json',
@@ -26,4 +28,13 @@ export async function apiFetch<T>(
   }
 
   return res.json();
+}
+
+export async function serverApiFetch<T>(
+  ctx: GetServerSidePropsContext,
+  endpoint: string,
+  options: RequestInit = {}
+): Promise<T> {
+  const token = parseCookies(ctx)['token'];
+  return apiFetch<T>(endpoint, options, token);
 }

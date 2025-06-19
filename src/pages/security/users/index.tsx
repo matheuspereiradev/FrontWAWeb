@@ -5,11 +5,18 @@ import {
 } from '@ant-design/icons';
 
 import Dashboard from '@/components/layouts/dashboard';
-import { Button, Card, Space, Switch, Table } from 'antd';
+import { Button, Card, Space, Switch, Table, Tooltip } from 'antd';
 import Link from 'next/link';
-import users from '../../../data/users.json';
+import { GetServerSideProps, GetServerSidePropsResult } from 'next';
+import { serverApiFetch } from '@/services/api_request';
+import { IUser, IUserListResponse } from '@/interfaces/IUser';
 
-const UsersPage = () => {
+interface Props {
+  users: IUser[];
+}
+
+
+const UsersPage = ({ users }: Props) => {
 
   const columns = [
     {
@@ -17,10 +24,23 @@ const UsersPage = () => {
       key: 'actions',
       render: (_: any, record: any) => (
         <Space>
-          <Button icon={<EditOutlined />} onClick={() => console.log('')} />
-          <Button icon={<DeleteOutlined />} danger onClick={() => console.log(record.username)} />
+          <Tooltip title="Clique para editar">
+            <Link href={`/security/users/edit/${record.id}`}><Button icon={<EditOutlined />} /></Link>
+          </Tooltip>
+          <Tooltip title="Clique para Excluir">
+            <Button
+              icon={<DeleteOutlined />}
+              danger
+              onClick={() => console.log(record.profileName)}
+            />
+          </Tooltip>
         </Space>
       )
+    },
+    {
+      title: 'ID',
+      dataIndex: 'id',
+      key: 'id'
     },
     {
       title: 'Name',
@@ -33,22 +53,15 @@ const UsersPage = () => {
       key: 'email'
     },
     {
-      title: 'Username',
+      title: 'Usuário',
       dataIndex: 'username',
       key: 'username'
     },
     {
-      title: 'Role',
-      dataIndex: 'role',
-      key: 'role'
+      title: 'Perfil',
+      key: 'profile',
+      render: (_: any, record: any) => record.profile?.profileName,
     },
-    {
-      title: 'Active',
-      dataIndex: 'active',
-      key: 'active',
-      render: (active: boolean) => <Switch checked={active} disabled />
-    }
-
   ];
 
   return (
@@ -59,10 +72,24 @@ const UsersPage = () => {
             Add User
           </Button>
         </Link>
-        <Table rowKey="username" columns={columns} dataSource={users} />;
+        <Table rowKey="id" columns={columns} dataSource={users} />;
       </Card>
     </Dashboard >
   );
 };
+
+
+export const getServerSideProps: GetServerSideProps<Props> =
+  async (ctx): Promise<GetServerSidePropsResult<Props>> => {
+    const { data: users } = await serverApiFetch<IUserListResponse>(ctx, '/User');
+
+    return {
+      props: {
+        users
+      }
+    };
+  }
+
+
 
 export default UsersPage;

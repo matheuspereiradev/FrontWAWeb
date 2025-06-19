@@ -1,50 +1,45 @@
 import {
-  AreaChartOutlined,
   ArrowLeftOutlined,
   ArrowRightOutlined,
   BarChartOutlined,
   CalendarOutlined,
   CheckCircleOutlined,
   CloseCircleOutlined,
-  ClusterOutlined,
-  DatabaseOutlined,
   DeploymentUnitOutlined,
   DownOutlined,
   FileAddOutlined,
   FileSearchOutlined,
   GroupOutlined,
-  HomeOutlined,
-  InboxOutlined,
-  LaptopOutlined,
-  MenuFoldOutlined,
-  MenuUnfoldOutlined,
-  PlusOutlined,
   ReconciliationOutlined,
   RiseOutlined,
   SettingOutlined,
   ShopOutlined,
   ShoppingOutlined,
   TagOutlined,
-  TagsOutlined,
-  ToolOutlined
+  TagsOutlined
 } from '@ant-design/icons';
-import { Button, Card, Col, Dropdown, Layout, Row, Space, Table, Tabs, Tag } from 'antd';
-import { GetStaticPropsContext } from 'next';
-import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
-import styles from '../styles/admin-buffer.module.css';
-import centers from '../data/centers.json';
+import { Button, Card, Col, Dropdown, Row, Space, Table, Tabs } from 'antd';
+import { GetServerSideProps, GetServerSidePropsResult } from 'next';
 import orders from '../data/orders.json';
 import sales from '../data/sales.json';
+import styles from '../styles/admin-buffer.module.css';
 
-import { Select, Progress, Typography } from 'antd';
-import { useState } from 'react';
-import { ColumnsType, ExpandableConfig } from 'antd/es/table/interface';
-import dataSource from '../data/centerproduct.json';
 import Dashboard from '@/components/layouts/dashboard';
-import Link from 'next/link';
+import { ICenter, ICenterListResponse } from '@/interfaces/ICenters';
+import { serverApiFetch } from '@/services/api_request';
+import { Progress, Select, Typography } from 'antd';
+import { ColumnsType } from 'antd/es/table/interface';
+import { useState } from 'react';
+import dataSource from '../data/centerproduct.json';
+import { ICenterProduct, ICenterProductListResponse } from '@/interfaces/ICenterProduct';
 
 const { Option } = Select;
 const { Text } = Typography;
+
+interface Props {
+  centers: ICenter[];
+  mainTable: ICenterProduct[];
+};
 
 const data = [
   { cor: 'Preto', valor: 21, corHex: '#000000' },
@@ -57,7 +52,7 @@ const data = [
 
 const total = data.reduce((acc, item) => acc + item.valor, 0);
 
-const DashboardPage = () => {
+const DashboardPage = (props: Props) => {
 
   const [selectedCentersKeys, setSelectedCentersKeys] = useState<React.Key[]>([]);
   const [showSidebar, setShowSidebar] = useState(true);
@@ -421,14 +416,14 @@ const DashboardPage = () => {
       key: 'id',
     },
     {
-      title: 'Nome',
-      dataIndex: 'name',
-      key: 'name',
-    },
-    {
       title: 'Código',
       dataIndex: 'code',
       key: 'code',
+    },
+    {
+      title: 'Nome',
+      dataIndex: 'description',
+      key: 'description',
     },
   ];
 
@@ -543,10 +538,6 @@ const DashboardPage = () => {
 
   return (
     <Dashboard title='Dashboard'>
-      {/* <div style={{ display: 'flex', padding: 12, gap: 24, backgroundColor: 'white', overflowX: 'auto' }}>
-        
-      </div> */}
-
       <Row gutter={16} style={{ marginTop: 24 }}>
         <Col span={17}>
           <Card>
@@ -584,7 +575,7 @@ const DashboardPage = () => {
               dataSource={dataSource}
               scroll={{ x: 'max-content' }}
               columns={mainColumns}
-              rowKey="IdProductoBodega"
+              rowKey="id"
               pagination={false}
               rowSelection={rowSelectionMainTable}
               size='middle'
@@ -656,7 +647,7 @@ const DashboardPage = () => {
 
           <Card style={{ width: '100%' }}>
             <Table
-              dataSource={centers}
+              dataSource={props.centers}
               rowSelection={rowSelectionCenters}
               columns={centerColumns}
               size='small'
@@ -707,4 +698,18 @@ const DashboardPage = () => {
 };
 
 
+export const getServerSideProps: GetServerSideProps<Props> =
+  async (ctx): Promise<GetServerSidePropsResult<Props>> => {
+    const { data: centers } = await serverApiFetch<ICenterListResponse>(ctx, '/Centers');
+    const { data: mainTable } = await serverApiFetch<ICenterProductListResponse>(ctx, '/CenterProduct?CenterId=1');
+
+    return {
+      props: {
+        centers,
+        mainTable
+      }
+    };
+  }
+
 export default DashboardPage;
+

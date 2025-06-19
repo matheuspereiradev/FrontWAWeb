@@ -79,12 +79,12 @@ const Dashboard = ({ children, title }: Props) => {
             <Menu.Item key="masters-leadtime-factor">Fator de leadtime</Menu.Item>
             <Menu.Item key="masters-buffer-profile">Perfil Buffer</Menu.Item>
             <Menu.Item key="masters-buffer-type">Tipo Buffer</Menu.Item>
-            <Menu.Item key="masters-allocation-group">Grupo de Alocação</Menu.Item>
-            <Menu.Item key="masters-centers">Centros</Menu.Item>
+            <Menu.Item key="masters-allocation-group"><Link href="/masters/alocation-groups">Grupo de Alocação</Link></Menu.Item>
+            <Menu.Item key="masters-centers"><Link href="/masters/centers">Centros</Link></Menu.Item>
           </SubMenu>
 
-          <SubMenu key="masters-orders" icon={<ShoppingCartOutlined />} title="Pedidos">
-            <Menu.Item key="orders-fake">Pedidos Fictícios</Menu.Item>
+          <SubMenu key="orders" icon={<ShoppingCartOutlined />} title="Pedidos">
+            <Menu.Item key="orders-fake"><Link href="/orders/orders-fake">Pedidos Fictícios</Link></Menu.Item>
             <Menu.Item key="orders-transfer-tracking">Acompanhamento de transferências</Menu.Item>
             <Menu.Item key="orders-production-orders">Ordens de produção</Menu.Item>
             <Menu.Item key="orders-purchase-orders">Ordens de compra</Menu.Item>
@@ -102,8 +102,8 @@ const Dashboard = ({ children, title }: Props) => {
 
 
           <SubMenu key="security" icon={<SafetyCertificateOutlined />} title="Segurança">
-            <Menu.Item key="security-profile">Perfil</Menu.Item>
-            <Menu.Item key="security-users">Usuários</Menu.Item>
+            <Menu.Item key="security-profile"><Link href="/security/user-profiles">Perfil</Link></Menu.Item>
+            <Menu.Item key="security-users"><Link href="/security/users">Usuários</Link></Menu.Item>
             <Menu.Item key="security-change-password">Alterar Senha</Menu.Item>
             <Menu.Item key="security-centers">Segurança Centros</Menu.Item>
             <Menu.Item key="security-importers">Segurança Importadores</Menu.Item>
