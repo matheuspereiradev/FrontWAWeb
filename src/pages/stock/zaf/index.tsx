@@ -7,7 +7,7 @@ import {
   EditOutlined,
   PlusOutlined
 } from '@ant-design/icons';
-import { Button, Card, Checkbox, DatePicker, Space, Table, Tooltip } from 'antd';
+import { Button, Card, Checkbox, DatePicker, Space, Table, Tag, Tooltip } from 'antd';
 import { GetServerSideProps, GetServerSidePropsResult } from 'next';
 import Link from 'next/link';
 
@@ -81,7 +81,11 @@ const ZafPage = (props: Props) => {
       title: 'Ativo',
       dataIndex: 'isActive',
       key: 'isActive',
-      render: (active: boolean) => <Checkbox checked={active} disabled />
+      render: (isActive: boolean) => (
+        <Tag color={isActive ? 'green' : 'red'}>
+          {isActive ? 'Sim' : 'Não'}
+        </Tag>
+      )
     },
     {
       title: 'Data de Início',

@@ -1,160 +1,138 @@
-import { GetStaticPropsContext } from 'next';
-import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
-import { useTranslation } from 'react-i18next';
+import {
+    DeleteOutlined,
+    EditOutlined,
+    PlusOutlined
+} from '@ant-design/icons';
 
 import Dashboard from '@/components/layouts/dashboard';
-import { AutoComplete, AutoCompleteProps, Button, Card, Checkbox, Col, DatePicker, Flex, Form, InputNumber, Radio, RadioChangeEvent, Row, Select } from 'antd';
-import { useState } from 'react';
-import centers from '../../../data/centers.json'
+import { Button, Card, Space, Table, Tag, Tooltip } from 'antd';
+import Link from 'next/link';
+import { GetServerSideProps, GetServerSidePropsResult } from 'next';
+import { serverApiFetch } from '@/services/api_request';
+import dayjs from 'dayjs';
+import { IDaf, IDafListResponse } from '@/interfaces/IDaf';
 
-const { RangePicker } = DatePicker;
+interface Props {
+    dafs: IDaf[];
+}
 
-const DafPage = () => {
+const DafListPage = ({ dafs }: Props) => {
+    const columns = [
+        {
+            title: 'Ações',
+            key: 'actions',
+            render: (_: any, record: IDaf) => (
+                <Space>
+                    <Tooltip title="Clique para editar">
+                        <Link href={`/stock/daf/edit/${record.id}`}><Button icon={<EditOutlined />} /></Link>
+                    </Tooltip>
+                    <Tooltip title="Clique para Excluir">
+                        <Button
+                            icon={<DeleteOutlined />}
+                            danger
+                            onClick={() => console.log(record.id)}
+                        />
+                    </Tooltip>
 
-    const [options, setOptions] = useState<AutoCompleteProps['options']>([]);
-    const [radioValue, setRadioValue] = useState(1);
-
-    const handleSearch = (value: string) => {
-        setOptions(() => {
-            return [{
-                label: 'a',
-                value: 'a',
-            }, {
-                label: 'b',
-                value: 'b',
-            }, {
-                label: 'c',
-                value: 'c',
-            }];
-        });
-    };
-
-    const onChange = (value: string) => {
-        console.log(`selected ${value}`);
-    };
-
-    const onSearch = (value: string) => {
-        console.log('search:', value);
-    };
+                </Space>
+            )
+        },
+        {
+            title: 'ID',
+            dataIndex: 'id',
+            key: 'id'
+        },
+        {
+            title: 'Referência',
+            key: 'reference',
+            render: (_: any, record: any) => record.product?.reference || '-',
+        },
+        {
+            title: 'Descrição Produto',
+            key: 'description',
+            render: (_: any, record: any) => record.product?.description || '-',
+        },
+        {
+            title: 'Centro',
+            key: 'center',
+            render: (_: any, record: any) => record.center?.code || '-',
+        },
+        {
+            title: 'Tipo de Ajuste',
+            dataIndex: 'adjustmentType',
+            key: 'adjustmentType'
+        },
+        {
+            title: 'Valor',
+            dataIndex: 'adjustmentValue',
+            key: 'adjustmentValue'
+        },
+        {
+            title: 'Descrição',
+            dataIndex: 'description',
+            key: 'description'
+        },
+        {
+            title: 'Ativo',
+            dataIndex: 'isActive',
+            key: 'isActive',
+            render: (isActive: boolean) => (
+                <Tag color={isActive ? 'green' : 'red'}>
+                    {isActive ? 'Sim' : 'Não'}
+                </Tag>
+            )
+        },
+        {
+            title: 'De',
+            dataIndex: 'effectiveFrom',
+            key: 'effectiveFrom',
+            render: (date: string) => dayjs(date).format('DD/MM/YYYY')
+        },
+        {
+            title: 'Até',
+            dataIndex: 'effectiveTo',
+            key: 'effectiveTo',
+            render: (date: string) => dayjs(date).format('DD/MM/YYYY')
+        },
+        {
+            title: 'Criado em',
+            dataIndex: 'createdAt',
+            key: 'createdAt',
+            render: (date: string) => dayjs(date).format('DD/MM/YYYY')
+        }
+    ];
 
     return (
-        <Dashboard title={'DAF'}>
+        <Dashboard title="DAFs (Fatores de Ajuste)">
             <Card>
-                <Form layout='vertical'>
-                    <Row gutter={16}>
-                        <Col span={12}>
-                            <Form.Item label="Centro">
-                                <Select
-                                    showSearch
-                                    placeholder="Selecione um centro"
-                                    optionFilterProp="label"
-                                    onChange={onChange}
-                                    onSearch={onSearch}
-                                    options={
-                                        centers.map((center) => {
-                                            return {
-                                                value: center.code,
-                                                label: center.name
-                                            }
-                                        })
-                                    }
-                                />
-                            </Form.Item>
-                        </Col>
-                        <Col span={12}>
-                            <Form.Item label="Referência">
-                                <AutoComplete
-                                    onSearch={handleSearch}
-                                    placeholder="input here"
-                                    options={options}
-                                />
-                            </Form.Item>
-                        </Col>
-                    </Row>
-                    <Row gutter={16}>
-                        <Col span={18}>
-                            <Form.Item label="Intervalo">
-                                <RangePicker style={{ width: '100%' }} />
-                            </Form.Item>
-                        </Col>
-                        <Col span={6} style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
-                            <Checkbox onChange={(e) => {
-                                console.log(`checked = ${e.target.checked}`);
-                            }}>Descartar consumos</Checkbox>
-                        </Col>
-                    </Row>
-                    <Flex style={{ marginBottom: 24 }} gap='middle'>
-                        <Card title={'DAF'} style={{ width: '100%' }}>
-                            <Flex gap='middle'>
-                                <Form.Item label="Tipo">
-                                    <Radio.Group
-                                        style={{
-                                            display: 'flex',
-                                            flexDirection: 'column',
-                                            gap: 8
-                                        }}
-                                        value={radioValue}
-                                        onChange={(e: RadioChangeEvent) => {
-                                            setRadioValue(e.target.value)
-                                        }}
-                                        options={[
-                                            { value: 1, label: 'Porcentagem (%)' },
-                                            { value: 2, label: 'Valor' }
-                                        ]}
-                                    />
-                                </Form.Item>
-                                <Form.Item style={{ display: 'flex', alignItems: 'center' }}>
-                                    <InputNumber min={0} max={1000000000} defaultValue={0} step={0.1} onChange={(value) => {
-                                        console.log('changed', value);
-                                    }} />
-                                </Form.Item>
-                            </Flex>
-                        </Card>
-                        <Card title='ADU'  style={{ width: '100%' }}>
-                            <Flex gap='middle' vertical>
-                                <Checkbox onChange={(e) => {
-                                    console.log(`checked = ${e.target.checked}`);
-                                }}>Usar ADU</Checkbox>
-                                <Row>
-                                    <Col span={12}>
-                                        <label>Dias de ADU</label>
-                                    </Col>
-                                    <Col span={12}>
-                                        <InputNumber min={0} max={1000000000} defaultValue={0} step={0.1} onChange={(value) => {
-                                            console.log('changed', value);
-                                        }} />
-                                    </Col>
-                                </Row>
-                                <Row>
-                                    <Col span={12}>
-                                        <label>Dias de ADU futuro</label>
-                                    </Col>
-                                    <Col span={12}>
-                                        <InputNumber min={0} max={1000000000} defaultValue={0} step={0.1} onChange={(value) => {
-                                            console.log('changed', value);
-                                        }} />
-                                    </Col>
-                                </Row>
-                            </Flex>
-                        </Card>
-                    </Flex>
-                    <Flex justify='flex-end'>
-                        <Button type='primary' htmlType="submit">
-                            Salvar
-                        </Button>
-                    </Flex>
-                </Form>
+                <Link href="/stock/daf/add">
+                    <Button
+                        type="primary"
+                        icon={<PlusOutlined />}
+                        style={{ marginBottom: 16 }}
+                    >
+                        Adicionar DAF
+                    </Button>
+                </Link>
+                <Table rowKey="id" columns={columns} dataSource={dafs} />
             </Card>
-        </Dashboard >
+        </Dashboard>
     );
 };
 
-export async function getStaticProps({ locale }: GetStaticPropsContext) {
+export const getServerSideProps: GetServerSideProps<Props> = async (
+    ctx
+): Promise<GetServerSidePropsResult<Props>> => {
+    const { data: dafs } = await serverApiFetch<IDafListResponse>(
+        ctx,
+        '/Daf'
+    );
+
     return {
         props: {
-            ...(await serverSideTranslations(locale ?? 'pt', ['common'])),
-        },
+            dafs
+        }
     };
-}
+};
 
-export default DafPage;
+export default DafListPage;
