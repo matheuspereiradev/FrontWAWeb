@@ -5,18 +5,39 @@ import {
 } from '@ant-design/icons';
 
 import Dashboard from '@/components/layouts/dashboard';
-import { Button, Card, Space, Table, Tag, Tooltip } from 'antd';
+import { Button, Card, Space, Table, Tag, Tooltip, Popconfirm } from 'antd';
 import Link from 'next/link';
 import { GetServerSideProps, GetServerSidePropsResult } from 'next';
-import { serverApiFetch } from '@/services/api_request';
+import { serverApiFetch, apiDelete } from '@/services/api_request';
 import dayjs from 'dayjs';
 import { IDaf, IDafListResponse } from '@/interfaces/IDaf';
+import { useNotification } from '@/hooks/notification';
+import { useRouter } from 'next/router';
 
 interface Props {
     dafs: IDaf[];
 }
 
 const DafListPage = ({ dafs }: Props) => {
+    const { openNotification } = useNotification();
+    const router = useRouter();
+
+    const handleDelete = async (id: number) => {
+        try {
+            await apiDelete(`/Daf/${id}`);
+            openNotification('success', {
+                message: 'DAF excluído com sucesso',
+                description: `ID: ${id}`
+            });
+            router.replace(router.asPath);
+        } catch (error) {
+            openNotification('error', {
+                message: 'Erro ao excluir DAF',
+                description: `${error}`
+            });
+        }
+    };
+
     const columns = [
         {
             title: 'Ações',
@@ -24,16 +45,20 @@ const DafListPage = ({ dafs }: Props) => {
             render: (_: any, record: IDaf) => (
                 <Space>
                     <Tooltip title="Clique para editar">
-                        <Link href={`/stock/daf/edit/${record.id}`}><Button icon={<EditOutlined />} /></Link>
+                        <Link href={`/stock/daf/edit/${record.id}`}>
+                            <Button icon={<EditOutlined />} />
+                        </Link>
                     </Tooltip>
-                    <Tooltip title="Clique para Excluir">
-                        <Button
-                            icon={<DeleteOutlined />}
-                            danger
-                            onClick={() => console.log(record.id)}
-                        />
+                    <Tooltip title="Clique para excluir">
+                        <Popconfirm
+                            title="Deseja realmente excluir este DAF?"
+                            okText="Sim"
+                            cancelText="Cancelar"
+                            onConfirm={() => handleDelete(record.id)}
+                        >
+                            <Button icon={<DeleteOutlined />} danger />
+                        </Popconfirm>
                     </Tooltip>
-
                 </Space>
             )
         },
@@ -45,17 +70,17 @@ const DafListPage = ({ dafs }: Props) => {
         {
             title: 'Referência',
             key: 'reference',
-            render: (_: any, record: any) => record.product?.reference || '-',
+            render: (_: any, record: IDaf) => record.product?.reference || '-',
         },
         {
             title: 'Descrição Produto',
             key: 'description',
-            render: (_: any, record: any) => record.product?.description || '-',
+            render: (_: any, record: IDaf) => record.product?.description || '-',
         },
         {
             title: 'Centro',
             key: 'center',
-            render: (_: any, record: any) => record.center?.code || '-',
+            render: (_: any, record: IDaf) => record.center?.code || '-',
         },
         {
             title: 'Tipo de Ajuste',

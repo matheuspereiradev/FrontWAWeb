@@ -57,4 +57,33 @@ export async function apiPost<T>(
   }
 }
 
+export async function apiPut<T>(
+  route: string,
+  body: any,
+): Promise<T> {
 
+  try {
+    const response = await apiFetch<T>(route, {
+      method: 'PUT',
+      body: JSON.stringify(body),
+    });
+
+    return response;
+  } catch (error: any) {
+    throw error;
+  }
+}
+
+export async function apiDelete<T>(
+  route: string
+): Promise<T> {
+  try {
+    const response = await apiFetch<T>(route, {
+      method: 'DELETE'
+    });
+
+    return response;
+  } catch (error: any) {
+    throw error;
+  }
+}
