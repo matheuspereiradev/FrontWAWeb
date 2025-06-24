@@ -28,7 +28,7 @@ const ZafPage = (props: Props) => {
         message: 'ZAF excluída com sucesso',
         description: `ID: ${id}`
       });
-      router.replace(router.asPath); // recarrega a página para atualizar dados
+      router.replace(router.asPath);
     } catch (error) {
       openNotification('error', {
         message: 'Erro ao excluir ZAF',
