@@ -77,7 +77,7 @@ const Dashboard = ({ children, title }: Props) => {
             <Menu.Item key="masters-production-calendar">Calendário Produtivo</Menu.Item>
             <Menu.Item key="masters-variability-factor">Fator de variabilidade (CV)</Menu.Item>
             <Menu.Item key="masters-leadtime-factor">Fator de leadtime</Menu.Item>
-            <Menu.Item key="masters-buffer-profile">Perfil Buffer</Menu.Item>
+            <Menu.Item key="masters-buffer-profile"><Link href="/masters/buffer-profiles">Perfil Buffer</Link></Menu.Item>
             <Menu.Item key="masters-buffer-type">Tipo Buffer</Menu.Item>
             <Menu.Item key="masters-allocation-group"><Link href="/masters/alocation-groups">Grupo de Alocação</Link></Menu.Item>
             <Menu.Item key="masters-centers"><Link href="/masters/centers">Centros</Link></Menu.Item>

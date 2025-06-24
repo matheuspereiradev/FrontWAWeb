@@ -1,5 +1,6 @@
 import { parseCookies } from 'nookies';
 import { GetServerSidePropsContext, GetStaticPropsContext } from 'next';
+import { useNotification } from '@/hooks/notification';
 
 export async function apiFetch<T>(
   endpoint: string,
@@ -38,3 +39,22 @@ export async function serverApiFetch<T>(
   const token = parseCookies(ctx)['token'];
   return apiFetch<T>(endpoint, options, token);
 }
+
+export async function apiPost<T>(
+  route: string,
+  body: any,
+): Promise<T> {
+
+  try {
+    const response = await apiFetch<T>(route, {
+      method: 'POST',
+      body: JSON.stringify(body),
+    });
+
+    return response;
+  } catch (error: any) {
+    throw error;
+  }
+}
+
+

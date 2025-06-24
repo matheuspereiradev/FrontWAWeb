@@ -1,9 +1,13 @@
 
+import { useNotification } from '@/hooks/notification';
 import { ICenter } from '@/interfaces/ICenters';
-import { IZaf } from '@/interfaces/IZaf';
+import { IProduct, IProductListResponse } from '@/interfaces/IProducts';
+import { IZaf, IZafResponse } from '@/interfaces/IZaf';
+import { apiFetch, apiPost } from '@/services/api_request';
 import { Button, Card, Col, DatePicker, Flex, Form, Input, InputNumber, Radio, Row, Select } from 'antd';
 import dayjs from 'dayjs';
-import { useEffect } from 'react';
+import { useRouter } from 'next/router';
+import { useEffect, useState } from 'react';
 
 const { RangePicker } = DatePicker;
 
@@ -14,34 +18,37 @@ interface Props {
 
 const MakeZaf = (props: Props) => {
 
+    const { openNotification } = useNotification();
+    const router = useRouter();
     const [form] = Form.useForm();
+    const [products, setProducts] = useState<IProduct[]>([]);
+
     const onSubmit = async (values: any) => {
-        const payload = {
+
+        apiPost<IZafResponse>('/Zaf', {
+            productId: values.productId,
             centerId: values.centerId,
-            referenceId: values.referenceId,
-            interval: {
-                start: values.interval[0].toISOString(),
-                end: values.interval[1].toISOString()
-            },
-            tipo: values.tipo,
-            valor: values.valor,
-            zona: values.zona
-        };
+            targetZone: values.targetZone,
+            adjustmentType: values.adjustmentType,
+            adjustmentValue: values.adjustmentValue,
+            description: values.description,
+            effectiveFrom: values.interval[0].toISOString(),
+            effectiveTo: values.interval[1].toISOString()
+        }).then((res) => {
+            openNotification('success', {
+                message: 'ZAF criada com sucesso',
+                description: `ZAF ${res.data.id} criada com sucesso`
+            });
+            router.push('/stock/zaf');
+        }).catch((err) => {
+            console.error('Erro:', err);
+            openNotification('error',{
+                message: 'Erro ao criar ZAF',
+                description: `${err}`
+            })
+        });
 
-        console.log('Sending:', values);
 
-        // try {
-        //     const response = await fetch('/api/zaf', {
-        //         method: 'POST',
-        //         headers: { 'Content-Type': 'application/json' },
-        //         body: JSON.stringify(payload)
-        //     });
-
-        //     const result = await response.json();
-        //     console.log('Result:', result);
-        // } catch (error) {
-        //     console.error('Erro ao cadastrar ZAF:', error);
-        // }
     };
 
     useEffect(() => {
@@ -60,6 +67,26 @@ const MakeZaf = (props: Props) => {
         }
     }, [props.zaf, form]);
 
+
+    const fetchProducts = async (centerId: string | number) => {
+        try {
+            const { data: prd } = await apiFetch<IProductListResponse>(`/Centers/${centerId}/Products`);
+            setProducts(prd);
+        } catch (err) {
+            openNotification('error',{
+                message: 'Erro buscar produtos',
+                description: `${err}`
+            })
+            console.error(err);
+            setProducts([]);
+        }
+    };
+
+    function handleCenterChange(value: string | number) {
+        form.setFieldsValue({ productId: undefined });
+        fetchProducts(value);
+    }
+
     return (
         <Card>
             <Form form={form} layout="vertical" onFinish={onSubmit}>
@@ -69,6 +96,7 @@ const MakeZaf = (props: Props) => {
                             <Select
                                 showSearch
                                 placeholder="Selecione um centro"
+                                onChange={handleCenterChange}
                                 optionFilterProp="label"
                                 options={props.centers.map((center) => ({
                                     value: center.id,
@@ -83,9 +111,9 @@ const MakeZaf = (props: Props) => {
                                 showSearch
                                 placeholder="Selecione uma referência"
                                 optionFilterProp="label"
-                                options={props.centers.map((center) => ({
-                                    value: center.id,
-                                    label: `${center.code} - ${center.description}`
+                                options={products.map((p) => ({
+                                    value: p.id,
+                                    label: `${p.reference} - ${p.description}`
                                 }))}
                             />
                         </Form.Item>
