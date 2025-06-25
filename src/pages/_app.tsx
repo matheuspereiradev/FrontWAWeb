@@ -6,7 +6,7 @@ import { NotificationProvider } from "@/hooks/notification";
 
 function App({ Component, pageProps }: AppProps) {
   return <NotificationProvider>
-    <Component {...pageProps} />;
+    <Component {...pageProps} />
   </NotificationProvider>
 }
 

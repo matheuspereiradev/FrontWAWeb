@@ -17,29 +17,31 @@ import {
   ShoppingOutlined,
   TagOutlined,
   TagsOutlined
-} from '@ant-design/icons';
-import { Button, Card, Col, Dropdown, Row, Space, Table, Tabs } from 'antd';
-import { GetServerSideProps, GetServerSidePropsResult } from 'next';
-import orders from '../data/orders.json';
-import sales from '../data/sales.json';
-import styles from '../styles/admin-buffer.module.css';
+} from '@ant-design/icons'
+import { Button, Card, Col, Dropdown, Row, Space, Table, Tabs } from 'antd'
+import { GetServerSideProps, GetServerSidePropsResult } from 'next'
+import orders from '../data/orders.json'
+import sales from '../data/sales.json'
+import styles from '../styles/admin-buffer.module.css'
 
-import Dashboard from '@/components/layouts/dashboard';
-import { ICenter, ICenterListResponse } from '@/interfaces/ICenters';
-import { serverApiFetch } from '@/services/api_request';
-import { Progress, Select, Typography } from 'antd';
-import { ColumnsType } from 'antd/es/table/interface';
-import { useState } from 'react';
-import dataSource from '../data/centerproduct.json';
-import { ICenterProduct, ICenterProductListResponse } from '@/interfaces/ICenterProduct';
+import Dashboard from '@/components/layouts/dashboard'
+import { ICenter, ICenterListResponse } from '@/interfaces/ICenters'
+import { serverApiFetch } from '@/services/api_request'
+import { Progress, Select, Typography } from 'antd'
+import { ColumnsType } from 'antd/es/table/interface'
+import { useState } from 'react'
+import dataSource from '../data/centerproduct.json'
+import { ICenterProduct, ICenterProductListResponse } from '@/interfaces/ICenterProduct'
+import NetflowChart from '@/components/Charts/NetflowChart'
+import { IDashboard, IDashboardListResponse } from '@/interfaces/IDashboard'
 
-const { Option } = Select;
-const { Text } = Typography;
+const { Option } = Select
+const { Text } = Typography
 
 interface Props {
-  centers: ICenter[];
-  mainTable: ICenterProduct[];
-};
+  centers: ICenter[]
+  mainTable: IDashboard[]
+}
 
 const data = [
   { cor: 'Preto', valor: 21, corHex: '#000000' },
@@ -47,30 +49,30 @@ const data = [
   { cor: 'Amarelo', valor: 20, corHex: '#ffaa00' },
   { cor: 'Verde', valor: 7, corHex: '#00aa00' },
   { cor: 'Azul', valor: 9, corHex: '#0000ff' },
-];
+]
 
 
-const total = data.reduce((acc, item) => acc + item.valor, 0);
+const total = data.reduce((acc, item) => acc + item.valor, 0)
 
 const DashboardPage = (props: Props) => {
 
-  const [selectedCentersKeys, setSelectedCentersKeys] = useState<React.Key[]>([]);
-  const [showSidebar, setShowSidebar] = useState(true);
+  const [selectedCentersKeys, setSelectedCentersKeys] = useState<React.Key[]>([])
+  const [showSidebar, setShowSidebar] = useState(true)
 
   const rowSelectionCenters = {
     selectedRowKeys: selectedCentersKeys,
     onChange: (selectedKeys: React.Key[]) => {
-      setSelectedCentersKeys(selectedKeys);
+      setSelectedCentersKeys(selectedKeys)
     },
-  };
-  const [selectedMainTableKeys, setSelectedMainTableKeys] = useState<React.Key[]>([]);
+  }
+  const [selectedMainTableKeys, setSelectedMainTableKeys] = useState<React.Key[]>([])
 
   const rowSelectionMainTable = {
     selectedRowKeys: selectedMainTableKeys,
     onChange: (selectedKeys: React.Key[]) => {
-      setSelectedMainTableKeys(selectedKeys);
+      setSelectedMainTableKeys(selectedKeys)
     },
-  };
+  }
 
 
   const mainColumns: ColumnsType<any> = [
@@ -201,212 +203,218 @@ const DashboardPage = (props: Props) => {
       ),
     },
     {
-      title: 'IdCentroProduto',
-      dataIndex: 'IdProductoBodega',
-      key: 'IdProductoBodega',
-      sorter: (a: any, b: any) => a.IdProductoBodega - b.IdProductoBodega,
+      title: 'Id Centro Produto',
+      dataIndex: 'centerProductId',
+      key: 'centerProductId',
+      sorter: (a: any, b: any) => a.centerProductId - b.centerProductId,
     },
     {
       title: 'IdCentro',
-      dataIndex: 'IdBodega',
-      key: 'IdBodega',
-      sorter: (a: any, b: any) => a.IdBodega - b.IdBodega,
+      dataIndex: 'centerId',
+      key: 'centerId',
+      sorter: (a: any, b: any) => a.centerId - b.centerId,
     },
     {
       title: 'IdProduto',
-      dataIndex: 'IdProducto',
-      key: 'IdProducto',
-      sorter: (a: any, b: any) => a.IdProducto - b.IdProducto,
+      dataIndex: 'productId',
+      key: 'productId',
+      sorter: (a: any, b: any) => a.productId - b.productId,
     },
     {
       title: 'Referencia',
-      dataIndex: 'Referencia',
-      key: 'Referencia',
-      sorter: (a: any, b: any) => a.Referencia.localeCompare(b.Referencia),
+      dataIndex: 'productReference',
+      key: 'productReference',
+      sorter: (a: any, b: any) => a.productReference.localeCompare(b.productReference),
     },
     {
       title: 'Descrição',
-      dataIndex: 'Descripcion',
-      key: 'Descripcion',
-      sorter: (a: any, b: any) => a.Descripcion.localeCompare(b.Descripcion),
+      dataIndex: 'productDescription',
+      key: 'productDescription',
+      sorter: (a: any, b: any) => a.productDescription.localeCompare(b.productDescription),
     },
     {
-      title: 'Centro',
-      dataIndex: 'Bodega',
-      key: 'Bodega',
-      sorter: (a: any, b: any) => a.Bodega.localeCompare(b.Bodega),
+      title: 'Cód Centro',
+      dataIndex: 'centerCode',
+      key: 'centerCode',
+      sorter: (a: any, b: any) => a.centerCode.localeCompare(b.centerCode),
     },
-    {
-      title: 'Cod Centro',
-      dataIndex: 'CodBodega',
-      key: 'CodBodega',
-      sorter: (a: any, b: any) => a.CodBodega.localeCompare(b.CodBodega),
-    },
-    {
-      title: 'Unidade Medida',
-      dataIndex: 'Unidad',
-      key: 'Unidad',
-      sorter: (a: any, b: any) => a.Unidad.localeCompare(b.Unidad),
-    },
-    {
-      title: 'Buffer Fluxo Líquido',
-      dataIndex: 'netflowBuffer',
-      key: 'netflowBuffer',
-      render: (value: number) => `${value}%`,
-      onCell: (record: any) => {
-        const value = record.netflowBuffer;
+    
+    // {
+    //   title: 'Buffer Fluxo Líquido',
+    //   dataIndex: 'netflowBuffer',
+    //   key: 'netflowBuffer',
+    //   render: (value: number) => `${value}%`,
+    //   onCell: (record: any) => {
+    //     const value = record.netflowBuffer
 
-        let backgroundColor = '';
+    //     let backgroundColor = ''
 
-        if (value > 100) {
-          backgroundColor = 'blue';
-        } else if (value > 70) {
-          backgroundColor = 'green';
-        } else if (value > 40) {
-          backgroundColor = 'yellow';
-        } else if (value >= 1) {
-          backgroundColor = 'red';
-        } else {
-          backgroundColor = 'black';
-        }
+    //     if (value > 100) {
+    //       backgroundColor = 'blue'
+    //     } else if (value > 70) {
+    //       backgroundColor = 'green'
+    //     } else if (value > 40) {
+    //       backgroundColor = 'yellow'
+    //     } else if (value >= 1) {
+    //       backgroundColor = 'red'
+    //     } else {
+    //       backgroundColor = 'black'
+    //     }
 
-        return {
-          style: {
-            backgroundColor,
-            color: backgroundColor === 'black' || backgroundColor === 'blue' ? 'white' : 'black', // contraste
-          },
-        };
-      }
-    },
-    {
-      title: 'Linha',
-      dataIndex: 'Linea',
-      key: 'Linea',
-      sorter: (a: any, b: any) => a.Linea.localeCompare(b.Linea),
-    },
-    {
-      title: 'SubLinha',
-      dataIndex: 'SubLinea',
-      key: 'SubLinea',
-      sorter: (a: any, b: any) => a.SubLinea.localeCompare(b.SubLinea),
-    },
+    //     return {
+    //       style: {
+    //         backgroundColor,
+    //         color: backgroundColor === 'black' || backgroundColor === 'blue' ? 'white' : 'black', // contraste
+    //       },
+    //     }
+    //   }
+    // },
     {
       title: 'Estoque On Hand',
-      dataIndex: 'Stock',
-      key: 'Stock',
+      dataIndex: 'stock',
+      key: 'stock',
       onCell: () => {
         return {
           style: {
             backgroundColor: 'PaleTurquoise',
           },
-        };
+        }
       },
 
-      sorter: (a: any, b: any) => a.Stock - b.Stock,
+      sorter: (a: any, b: any) => a.stock - b.stock,
     },
     {
       title: 'Estoque em Transito',
-      dataIndex: 'StockEnTransito',
-      key: 'StockEnTransito',
-      sorter: (a: any, b: any) => a.StockEnTransito - b.StockEnTransito,
+      dataIndex: 'totalInbounds',
+      key: 'totalInbounds',
+      sorter: (a: any, b: any) => a.totalInbounds - b.totalInbounds,
     },
     {
       title: 'Saídas',
-      dataIndex: 'CantidadPD',
-      key: 'CantidadPD',
-      sorter: (a: any, b: any) => a.CantidadPD - b.CantidadPD,
+      dataIndex: 'totalOutbounds',
+      key: 'totalOutbounds',
+      sorter: (a: any, b: any) => a.totalOutbounds - b.totalOutbounds,
     },
     {
       title: 'ADI',
-      dataIndex: 'ADI',
-      key: 'ADI',
-      sorter: (a: any, b: any) => a.ADI - b.ADI,
+      dataIndex: 'adi',
+      key: 'adi',
+      sorter: (a: any, b: any) => a.adi - b.adi,
     },
-    {
-      title: 'Qtd otimizada',
-      dataIndex: 'PedidoARealizar',
-      key: 'PedidoARealizar',
-      onCell: () => {
-        return {
-          style: {
-            backgroundColor: 'Pink',
-          },
-        };
-      },
-
-      sorter: (a: any, b: any) => a.PedidoARealizar - b.PedidoARealizar,
-    },
-    {
-      title: 'Quantidade Sugerida',
-      dataIndex: 'CantidadAPedir',
-      key: 'CantidadAPedir',
-      sorter: (a: any, b: any) => a.CantidadAPedir - b.CantidadAPedir,
-    },
+    // {
+    //   title: 'Qtd otimizada',
+    //   dataIndex: 'PedidoARealizar',
+    //   key: 'PedidoARealizar',
+    //   onCell: () => {
+    //     return {
+    //       style: {
+    //         backgroundColor: 'Pink',
+    //       },
+    //     }
+    //   },
+    //   sorter: (a: any, b: any) => a.PedidoARealizar - b.PedidoARealizar,
+    // },
+    // {
+    //   title: 'Quantidade Sugerida',
+    //   dataIndex: 'CantidadAPedir',
+    //   key: 'CantidadAPedir',
+    //   sorter: (a: any, b: any) => a.CantidadAPedir - b.CantidadAPedir,
+    // },
     {
       title: 'MOQ',
-      dataIndex: 'CantMinPedido',
-      key: 'CantMinPedido',
-      sorter: (a: any, b: any) => a.CantMinPedido - b.CantMinPedido,
+      dataIndex: 'minimumOrderQuantity',
+      key: 'minimumOrderQuantity',
+      sorter: (a: any, b: any) => a.minimumOrderQuantity - b.minimumOrderQuantity,
     },
     {
       title: 'Qnt de embalagem',
-      dataIndex: 'CantEmpaque',
-      key: 'CantEmpaque',
-      sorter: (a: any, b: any) => a.CantEmpaque - b.CantEmpaque,
+      dataIndex: 'packageQuantity',
+      key: 'packageQuantity',
+      sorter: (a: any, b: any) => a.packageQuantity - b.packageQuantity,
     },
     {
-      title: 'TOR',
-      dataIndex: 'TOR',
-      key: 'TOR',
-      onCell: () => {
-        return {
-          style: {
-            backgroundColor: 'Red',
-          },
-        };
-      },
-      sorter: (a: any, b: any) => a.TOR - b.TOR,
+      title: 'frequencia',
+      dataIndex: 'frequency',
+      key: 'frequency',
+      sorter: (a: any, b: any) => a.frequency - b.frequency,
     },
     {
-      title: 'TOY',
-      dataIndex: 'TOY',
-      key: 'TOY',
-      onCell: () => {
-        return {
-          style: {
-            backgroundColor: 'Yellow',
-          },
-        };
-      },
-      sorter: (a: any, b: any) => a.TOY - b.TOY,
+      title: 'leadTime',
+      dataIndex: 'leadTime',
+      key: 'leadTime',
+      sorter: (a: any, b: any) => a.leadTime - b.leadTime,
     },
     {
-      title: 'TOG',
-      dataIndex: 'TOG',
-      key: 'TOG',
-      onCell: () => {
-        return {
-          style: {
-            backgroundColor: 'Green',
-          },
-        };
-      },
-      sorter: (a: any, b: any) => a.TOR - b.TOR,
+      title: 'ADU',
+      dataIndex: 'adu',
+      key: 'adu',
+      sorter: (a: any, b: any) => a.adu - b.adu,
     },
     {
-      title: 'CampoAd1',
-      dataIndex: 'CampoAd1',
-      key: 'CampoAd1',
-      sorter: (a: any, b: any) => a.CampoAd1.localeCompare(b.CampoAd1),
+      title: 'ADU Futuro',
+      dataIndex: 'futureAdu',
+      key: 'futureAdu',
+      sorter: (a: any, b: any) => a.futureAdu - b.futureAdu,
     },
     {
-      title: 'CampoAd2',
-      dataIndex: 'CampoAd2',
-      key: 'CampoAd2',
-      sorter: (a: any, b: any) => a.CampoAd2.localeCompare(b.CampoAd2),
-    }
+      title: 'Desvio Padrão',
+      dataIndex: 'standardDeviation',
+      key: 'standardDeviation',
+      sorter: (a: any, b: any) => a.standardDeviation - b.standardDeviation,
+    },
+    {
+      title: 'Coeficiente de Variabilidade',
+      dataIndex: 'variabilityCoefficient',
+      key: 'variabilityCoefficient',
+      sorter: (a: any, b: any) => a.variabilityCoefficient - b.variabilityCoefficient,
+    },
+    {
+      title: 'Pico Qualificado',
+      dataIndex: 'qualifiedSpike',
+      key: 'qualifiedSpike',
+      sorter: (a: any, b: any) => a.qualifiedSpike - b.qualifiedSpike,
+    },
+    // {
+    //   title: 'TOR',
+    //   dataIndex: 'TOR',
+    //   key: 'TOR',
+    //   onCell: () => {
+    //     return {
+    //       style: {
+    //         backgroundColor: 'Red',
+    //       },
+    //     }
+    //   },
+    //   sorter: (a: any, b: any) => a.TOR - b.TOR,
+    // },
+    // {
+    //   title: 'TOY',
+    //   dataIndex: 'TOY',
+    //   key: 'TOY',
+    //   onCell: () => {
+    //     return {
+    //       style: {
+    //         backgroundColor: 'Yellow',
+    //       },
+    //     }
+    //   },
+    //   sorter: (a: any, b: any) => a.TOY - b.TOY,
+    // },
+    // {
+    //   title: 'TOG',
+    //   dataIndex: 'TOG',
+    //   key: 'TOG',
+    //   onCell: () => {
+    //     return {
+    //       style: {
+    //         backgroundColor: 'Green',
+    //       },
+    //     }
+    //   },
+    //   sorter: (a: any, b: any) => a.TOR - b.TOR,
+    // }
 
-  ];
+  ]
 
 
   const centerColumns = [
@@ -425,7 +433,7 @@ const DashboardPage = (props: Props) => {
       dataIndex: 'description',
       key: 'description',
     },
-  ];
+  ]
 
   const ordersColumns = [
     {
@@ -479,20 +487,20 @@ const DashboardPage = (props: Props) => {
       key: 'BufferTempo',
       render: (value: number) => `${value.toFixed(2)}%`,
       onCell: (record: any) => {
-        const value = record.BufferTempo;
+        const value = record.BufferTempo
 
-        let backgroundColor = '';
+        let backgroundColor = ''
 
         if (value > 100) {
-          backgroundColor = 'blue';
+          backgroundColor = 'blue'
         } else if (value > 70) {
-          backgroundColor = 'green';
+          backgroundColor = 'green'
         } else if (value > 40) {
-          backgroundColor = 'yellow';
+          backgroundColor = 'yellow'
         } else if (value >= 1) {
-          backgroundColor = 'red';
+          backgroundColor = 'red'
         } else {
-          backgroundColor = 'black';
+          backgroundColor = 'black'
         }
 
         return {
@@ -500,7 +508,7 @@ const DashboardPage = (props: Props) => {
             backgroundColor,
             color: backgroundColor === 'black' || backgroundColor === 'blue' ? 'white' : 'black',
           },
-        };
+        }
       }
     },
     {
@@ -509,20 +517,20 @@ const DashboardPage = (props: Props) => {
       key: 'BufferExecucao',
       render: (value: number) => `${value.toFixed(2)}%`,
       onCell: (record: any) => {
-        const value = record.BufferExecucao;
+        const value = record.BufferExecucao
 
-        let backgroundColor = '';
+        let backgroundColor = ''
 
         if (value > 100) {
-          backgroundColor = 'blue';
+          backgroundColor = 'blue'
         } else if (value > 70) {
-          backgroundColor = 'green';
+          backgroundColor = 'green'
         } else if (value > 40) {
-          backgroundColor = 'yellow';
+          backgroundColor = 'yellow'
         } else if (value >= 1) {
-          backgroundColor = 'red';
+          backgroundColor = 'red'
         } else {
-          backgroundColor = 'black';
+          backgroundColor = 'black'
         }
 
         return {
@@ -530,11 +538,11 @@ const DashboardPage = (props: Props) => {
             backgroundColor,
             color: backgroundColor === 'black' || backgroundColor === 'blue' ? 'white' : 'black',
           },
-        };
+        }
       }
 
     }
-  ];
+  ]
 
   return (
     <Dashboard title='Dashboard'>
@@ -572,13 +580,12 @@ const DashboardPage = (props: Props) => {
               </Card>
             </Space>
             <Table
-              dataSource={dataSource}
+              dataSource={props.mainTable}
               scroll={{ x: 'max-content' }}
               columns={mainColumns}
-              rowKey="id"
-              pagination={false}
+              rowKey="centerProductId"
               rowSelection={rowSelectionMainTable}
-              size='middle'
+              size='small'
               expandable={{
                 expandedRowRender: (record) => <Tabs
                   defaultActiveKey="2"
@@ -609,7 +616,7 @@ const DashboardPage = (props: Props) => {
                     {
                       key: '3',
                       label: `Centros`,
-                      children: `Centros`,
+                      children: <NetflowChart/>,
                       icon: <ShopOutlined />,
                     },
                     {
@@ -666,7 +673,7 @@ const DashboardPage = (props: Props) => {
             </div>
 
             {data.map((item) => {
-              const porcentagem = total === 0 ? 0 : Math.round((item.valor / total) * 100);
+              const porcentagem = total === 0 ? 0 : Math.round((item.valor / total) * 100)
               return (
                 <Row key={item.cor} align="middle" style={{ marginBottom: 8 }}>
                   <Col span={4}>
@@ -684,7 +691,7 @@ const DashboardPage = (props: Props) => {
                     />
                   </Col>
                 </Row>
-              );
+              )
             })}
 
             <Row justify="end" style={{ marginTop: 16 }}>
@@ -694,22 +701,24 @@ const DashboardPage = (props: Props) => {
         </Col>
       </Row>
     </Dashboard >
-  );
-};
+  )
+}
 
 
 export const getServerSideProps: GetServerSideProps<Props> =
   async (ctx): Promise<GetServerSidePropsResult<Props>> => {
-    const { data: centers } = await serverApiFetch<ICenterListResponse>(ctx, '/Centers');
-    const { data: mainTable } = await serverApiFetch<ICenterProductListResponse>(ctx, '/CenterProduct?CenterId=1');
+    const { data: centers } = await serverApiFetch<ICenterListResponse>(ctx, '/Centers')
+    const { data: mainTable } = await serverApiFetch<IDashboardListResponse>(ctx, '/Report/Dashboard')
+
+    console.log('Maintable', mainTable.length)
 
     return {
       props: {
         centers,
         mainTable
       }
-    };
+    }
   }
 
-export default DashboardPage;
+export default DashboardPage
 

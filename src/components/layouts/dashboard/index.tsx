@@ -1,4 +1,4 @@
-import LanguageSwitcher from '@/components/fragments/LanguageSwitcher';
+import LanguageSwitcher from '@/components/LanguageSwitcher';
 import {
   ApartmentOutlined,
   CloudUploadOutlined,
