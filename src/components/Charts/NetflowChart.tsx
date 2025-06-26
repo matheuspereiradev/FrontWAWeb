@@ -355,7 +355,7 @@ export default function NetflowChart() {
                 series: { 3: { type: 'line' }, 4: { type: 'line' } },
                 isStacked: true,
                 title: `Buffer de Fluxo Líquido`,
-                colors: ['red', 'yellow', 'green', '#009cde', 'black'],
+                colors: ['red', 'yellow', 'green', 'blue', 'black'],
                 hAxis: {
                     title: "dia",
                     titleTextStyle: { color: '#333', },
@@ -377,7 +377,7 @@ export default function NetflowChart() {
                 chartArea: {
                     width: '80%',
                     height: '70%',
-                    backgroundColor: 'blue'
+                    backgroundColor: '#009CDE'
                 }
             }}
         />

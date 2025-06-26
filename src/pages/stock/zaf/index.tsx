@@ -1,15 +1,17 @@
 import Dashboard from '@/components/layouts/dashboard';
+import { useNotification } from '@/hooks/notification';
 import { IZaf, IZafListResponse } from '@/interfaces/IZaf';
-import { serverApiFetch } from '@/services/api_request';
+import { apiDelete, serverApiFetch } from '@/services/api_request';
 import { formatDate } from '@/utils/date';
 import {
   DeleteOutlined,
   EditOutlined,
   PlusOutlined
 } from '@ant-design/icons';
-import { Button, Card, Checkbox, DatePicker, Space, Table, Tag, Tooltip } from 'antd';
+import { Button, Card, Checkbox, DatePicker, Popconfirm, Space, Table, Tag, Tooltip } from 'antd';
 import { GetServerSideProps, GetServerSidePropsResult } from 'next';
 import Link from 'next/link';
+import { useRouter } from 'next/router';
 
 interface Props {
   zafs: IZaf[];
@@ -17,6 +19,25 @@ interface Props {
 
 
 const ZafPage = (props: Props) => {
+
+  const { openNotification } = useNotification();
+  const router = useRouter();
+
+  const handleDelete = async (id: number) => {
+    try {
+      await apiDelete(`/Zaf/${id}`);
+      openNotification('success', {
+        message: 'excluído com sucesso',
+        description: `ID: ${id}`
+      });
+      router.replace(router.asPath);
+    } catch (error) {
+      openNotification('error', {
+        message: 'Erro ao excluir',
+        description: `${error}`
+      });
+    }
+  };
 
   const columns = [
     {
@@ -27,12 +48,15 @@ const ZafPage = (props: Props) => {
           <Tooltip title="Clique para editar">
             <Link href={`/stock/zaf/edit/${record.id}`}><Button icon={<EditOutlined />} /></Link>
           </Tooltip>
-          <Tooltip title="Clique para Excluir">
-            <Button
-              icon={<DeleteOutlined />}
-              danger
-              onClick={() => console.log(record.profileName)}
-            />
+          <Tooltip title="Clique para excluir">
+            <Popconfirm
+              title="Deseja realmente excluir este DAF?"
+              okText="Sim"
+              cancelText="Cancelar"
+              onConfirm={() => handleDelete(record.id)}
+            >
+              <Button icon={<DeleteOutlined />} danger />
+            </Popconfirm>
           </Tooltip>
         </Space>
       )
@@ -115,7 +139,7 @@ const ZafPage = (props: Props) => {
           Adicionar ZAF
         </Button>
       </Link>
-      <Table rowKey="id" columns={columns} dataSource={props.zafs} size='small'/>;
+      <Table rowKey="id" columns={columns} dataSource={props.zafs} size='small' />
     </Card>
   </Dashboard >
 };

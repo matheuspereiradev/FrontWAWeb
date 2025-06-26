@@ -24,16 +24,15 @@ import orders from '../data/orders.json'
 import sales from '../data/sales.json'
 import styles from '../styles/admin-buffer.module.css'
 
+import NetflowChart from '@/components/Charts/NetflowChart'
 import Dashboard from '@/components/layouts/dashboard'
 import { ICenter, ICenterListResponse } from '@/interfaces/ICenters'
+import { IDashboard, IDashboardListResponse } from '@/interfaces/IDashboard'
 import { serverApiFetch } from '@/services/api_request'
 import { Progress, Select, Typography } from 'antd'
 import { ColumnsType } from 'antd/es/table/interface'
+import dayjs from 'dayjs'
 import { useState } from 'react'
-import dataSource from '../data/centerproduct.json'
-import { ICenterProduct, ICenterProductListResponse } from '@/interfaces/ICenterProduct'
-import NetflowChart from '@/components/Charts/NetflowChart'
-import { IDashboard, IDashboardListResponse } from '@/interfaces/IDashboard'
 
 const { Option } = Select
 const { Text } = Typography
@@ -81,7 +80,8 @@ const DashboardPage = (props: Props) => {
       key: 'action',
       fixed: 'left',
       sorter: false,
-      render: () => (
+      render: (result) => (
+
         <Space size="middle">
           <Dropdown menu={{
             items: [
@@ -174,7 +174,7 @@ const DashboardPage = (props: Props) => {
                 key: '3',
                 icon: <RiseOutlined />,
                 label: (
-                  <a target="_blank" rel="noopener noreferrer" href="https://www.antgroup.com">
+                  <a target="_blank" rel="noopener noreferrer" href={`/stock/daily-usage-and-spikes?center=${result.centerId}&product=${result.productId}&start=${dayjs().subtract(result.aduDays, 'day').format('YYYY-MM-DD')}&end=${dayjs().format('YYYY-MM-DD')}`}>
                     Picos e faturamentos
                   </a>
                 ),
@@ -238,37 +238,55 @@ const DashboardPage = (props: Props) => {
       key: 'centerCode',
       sorter: (a: any, b: any) => a.centerCode.localeCompare(b.centerCode),
     },
-    
-    // {
-    //   title: 'Buffer Fluxo Líquido',
-    //   dataIndex: 'netflowBuffer',
-    //   key: 'netflowBuffer',
-    //   render: (value: number) => `${value}%`,
-    //   onCell: (record: any) => {
-    //     const value = record.netflowBuffer
+    {
+      title: 'Centro',
+      dataIndex: 'centerDescription',
+      key: 'centerDescription',
+      sorter: (a: any, b: any) => a.centerDescription.localeCompare(b.centerDescription),
+    },
+    {
+      title: 'Unidade de Medida',
+      dataIndex: 'measurementUnit',
+      key: 'measurementUnit',
+      sorter: (a: any, b: any) => a.measurementUnit.localeCompare(b.measurementUnit),
+    },
+    {
+      title: 'Perfil',
+      dataIndex: 'bufferProfile',
+      key: 'bufferProfile',
+      sorter: (a: any, b: any) => a.bufferProfile.localeCompare(b.bufferProfile),
+    },
+    {
+      title: 'Buffer Fluxo Líquido',
+      dataIndex: 'netFlowBuffer',
+      sorter: (a: any, b: any) => a.netFlowBuffer - b.netFlowBuffer,
+      key: 'netFlowBuffer',
+      render: (value: number) => `${(value * 100).toFixed(2)}%`,
+      onCell: (record: any) => {
+        const value = record.netFlowBuffer * 100
 
-    //     let backgroundColor = ''
+        let backgroundColor = ''
 
-    //     if (value > 100) {
-    //       backgroundColor = 'blue'
-    //     } else if (value > 70) {
-    //       backgroundColor = 'green'
-    //     } else if (value > 40) {
-    //       backgroundColor = 'yellow'
-    //     } else if (value >= 1) {
-    //       backgroundColor = 'red'
-    //     } else {
-    //       backgroundColor = 'black'
-    //     }
+        if (value > 100) {
+          backgroundColor = 'blue'
+        } else if (value > 70) {
+          backgroundColor = 'green'
+        } else if (value > 40) {
+          backgroundColor = 'yellow'
+        } else if (value >= 1) {
+          backgroundColor = 'red'
+        } else {
+          backgroundColor = 'black'
+        }
 
-    //     return {
-    //       style: {
-    //         backgroundColor,
-    //         color: backgroundColor === 'black' || backgroundColor === 'blue' ? 'white' : 'black', // contraste
-    //       },
-    //     }
-    //   }
-    // },
+        return {
+          style: {
+            backgroundColor,
+            color: backgroundColor === 'black' || backgroundColor === 'blue' ? 'white' : 'black', // contraste
+          },
+        }
+      }
+    },
     {
       title: 'Estoque On Hand',
       dataIndex: 'stock',
@@ -301,30 +319,48 @@ const DashboardPage = (props: Props) => {
       key: 'adi',
       sorter: (a: any, b: any) => a.adi - b.adi,
     },
-    // {
-    //   title: 'Qtd otimizada',
-    //   dataIndex: 'PedidoARealizar',
-    //   key: 'PedidoARealizar',
-    //   onCell: () => {
-    //     return {
-    //       style: {
-    //         backgroundColor: 'Pink',
-    //       },
-    //     }
-    //   },
-    //   sorter: (a: any, b: any) => a.PedidoARealizar - b.PedidoARealizar,
-    // },
-    // {
-    //   title: 'Quantidade Sugerida',
-    //   dataIndex: 'CantidadAPedir',
-    //   key: 'CantidadAPedir',
-    //   sorter: (a: any, b: any) => a.CantidadAPedir - b.CantidadAPedir,
-    // },
+    {
+      title: 'Qtd otimizada',
+      dataIndex: 'optimizedQuantity',
+      key: 'optimizedQuantity',
+      onCell: () => {
+        return {
+          style: {
+            backgroundColor: 'Pink',
+          },
+        }
+      },
+      sorter: (a: any, b: any) => a.optimizedQuantity - b.optimizedQuantity,
+    },
+    {
+      title: 'Quantidade Sugerida',
+      dataIndex: 'orderToMake',
+      key: 'orderToMake',
+      sorter: (a: any, b: any) => a.orderToMake - b.orderToMake,
+    },
+    {
+      title: 'Dias ADU',
+      dataIndex: 'aduDays',
+      key: 'aduDays',
+      sorter: (a: any, b: any) => a.aduDays - b.aduDays,
+    },
+    {
+      title: 'Dias ADU Futuro',
+      dataIndex: 'futureAduDays',
+      key: 'futureAduDays',
+      sorter: (a: any, b: any) => a.futureAduDays - b.futureAduDays,
+    },
     {
       title: 'MOQ',
       dataIndex: 'minimumOrderQuantity',
       key: 'minimumOrderQuantity',
       sorter: (a: any, b: any) => a.minimumOrderQuantity - b.minimumOrderQuantity,
+    },
+    {
+      title: 'Fluxo Líquido',
+      dataIndex: 'netFlow',
+      key: 'netFlow',
+      sorter: (a: any, b: any) => a.netFlow - b.netFlow,
     },
     {
       title: 'Qnt de embalagem',
@@ -337,6 +373,12 @@ const DashboardPage = (props: Props) => {
       dataIndex: 'frequency',
       key: 'frequency',
       sorter: (a: any, b: any) => a.frequency - b.frequency,
+    },
+    {
+      title: 'Fluxo líquido',
+      dataIndex: 'netFlow',
+      key: 'netFlow',
+      sorter: (a: any, b: any) => a.netFlow - b.netFlow,
     },
     {
       title: 'leadTime',
@@ -369,50 +411,50 @@ const DashboardPage = (props: Props) => {
       sorter: (a: any, b: any) => a.variabilityCoefficient - b.variabilityCoefficient,
     },
     {
-      title: 'Pico Qualificado',
+      title: 'Demanda Qualificada',
       dataIndex: 'qualifiedSpike',
       key: 'qualifiedSpike',
       sorter: (a: any, b: any) => a.qualifiedSpike - b.qualifiedSpike,
     },
-    // {
-    //   title: 'TOR',
-    //   dataIndex: 'TOR',
-    //   key: 'TOR',
-    //   onCell: () => {
-    //     return {
-    //       style: {
-    //         backgroundColor: 'Red',
-    //       },
-    //     }
-    //   },
-    //   sorter: (a: any, b: any) => a.TOR - b.TOR,
-    // },
-    // {
-    //   title: 'TOY',
-    //   dataIndex: 'TOY',
-    //   key: 'TOY',
-    //   onCell: () => {
-    //     return {
-    //       style: {
-    //         backgroundColor: 'Yellow',
-    //       },
-    //     }
-    //   },
-    //   sorter: (a: any, b: any) => a.TOY - b.TOY,
-    // },
-    // {
-    //   title: 'TOG',
-    //   dataIndex: 'TOG',
-    //   key: 'TOG',
-    //   onCell: () => {
-    //     return {
-    //       style: {
-    //         backgroundColor: 'Green',
-    //       },
-    //     }
-    //   },
-    //   sorter: (a: any, b: any) => a.TOR - b.TOR,
-    // }
+    {
+      title: 'TOG',
+      dataIndex: 'topOfGreen',
+      key: 'topOfGreen',
+      onCell: () => {
+        return {
+          style: {
+            backgroundColor: 'Green',
+          },
+        }
+      },
+      sorter: (a: any, b: any) => a.topOfGreen - b.topOfGreen,
+    },
+    {
+      title: 'TOY',
+      dataIndex: 'topOfYellow',
+      key: 'topOfYellow',
+      onCell: () => {
+        return {
+          style: {
+            backgroundColor: 'Yellow',
+          },
+        }
+      },
+      sorter: (a: any, b: any) => a.topOfYellow - b.topOfYellow,
+    },
+    {
+      title: 'TOR',
+      dataIndex: 'topOfRed',
+      key: 'topOfRed',
+      onCell: () => {
+        return {
+          style: {
+            backgroundColor: 'Red',
+          },
+        }
+      },
+      sorter: (a: any, b: any) => a.topOfRed - b.topOfRed,
+    }
 
   ]
 
@@ -587,64 +629,66 @@ const DashboardPage = (props: Props) => {
               rowSelection={rowSelectionMainTable}
               size='small'
               expandable={{
-                expandedRowRender: (record) => <Tabs
-                  defaultActiveKey="2"
-                  type="card"
-                  items={[
-                    {
-                      key: '1',
-                      label: `Entradas`,
-                      children: <Table
-                        dataSource={orders}
-                        columns={ordersColumns}
-                        size='small'
-                        pagination={false}
-                      />,
-                      icon: <ArrowLeftOutlined />,
-                    },
-                    {
-                      key: '2',
-                      label: `Saídas`,
-                      children: <Table
-                        dataSource={sales}
-                        columns={ordersColumns}
-                        size='small'
-                        pagination={false}
-                      />,
-                      icon: <ArrowRightOutlined />,
-                    },
-                    {
-                      key: '3',
-                      label: `Centros`,
-                      children: <NetflowChart/>,
-                      icon: <ShopOutlined />,
-                    },
-                    {
-                      key: '4',
-                      label: `Buffer DDMRP`,
-                      children: `Buffer DDMRP`,
-                      icon: <FileSearchOutlined />,
-                    },
-                    {
-                      key: '5',
-                      label: `DAF`,
-                      children: `DAF`,
-                      icon: <ReconciliationOutlined />,
-                    },
-                    {
-                      key: '6',
-                      label: `ZAF`,
-                      children: `ZAF`,
-                      icon: <ReconciliationOutlined />,
-                    },
-                    {
-                      key: '7',
-                      label: `Pedidos Ficticios`,
-                      children: `Pedidos Ficticios`,
-                      icon: <ShoppingOutlined />,
-                    },
-                  ]}
-                />
+                expandedRowRender: (record) => <div style={{ backgroundColor: 'cadetblue', padding: '12px' }}>
+                  <Tabs
+                    defaultActiveKey="2"
+                    type="card"
+                    items={[
+                      {
+                        key: '1',
+                        label: `Entradas`,
+                        children: <Table
+                          dataSource={orders}
+                          columns={ordersColumns}
+                          size='small'
+                          pagination={false}
+                        />,
+                        icon: <ArrowLeftOutlined />,
+                      },
+                      {
+                        key: '2',
+                        label: `Saídas`,
+                        children: <Table
+                          dataSource={sales}
+                          columns={ordersColumns}
+                          size='small'
+                          pagination={false}
+                        />,
+                        icon: <ArrowRightOutlined />,
+                      },
+                      {
+                        key: '3',
+                        label: `Centros`,
+                        children: <NetflowChart />,
+                        icon: <ShopOutlined />,
+                      },
+                      {
+                        key: '4',
+                        label: `Buffer DDMRP`,
+                        children: `Buffer DDMRP`,
+                        icon: <FileSearchOutlined />,
+                      },
+                      {
+                        key: '5',
+                        label: `DAF`,
+                        children: `DAF`,
+                        icon: <ReconciliationOutlined />,
+                      },
+                      {
+                        key: '6',
+                        label: `ZAF`,
+                        children: `ZAF`,
+                        icon: <ReconciliationOutlined />,
+                      },
+                      {
+                        key: '7',
+                        label: `Pedidos Ficticios`,
+                        children: `Pedidos Ficticios`,
+                        icon: <ShoppingOutlined />,
+                      },
+                    ]}
+                  />
+                </div>
               }}
               className={styles['custom-table']}
             />
@@ -709,8 +753,6 @@ export const getServerSideProps: GetServerSideProps<Props> =
   async (ctx): Promise<GetServerSidePropsResult<Props>> => {
     const { data: centers } = await serverApiFetch<ICenterListResponse>(ctx, '/Centers')
     const { data: mainTable } = await serverApiFetch<IDashboardListResponse>(ctx, '/Report/Dashboard')
-
-    console.log('Maintable', mainTable.length)
 
     return {
       props: {
