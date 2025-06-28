@@ -148,7 +148,7 @@ const Dashboard = ({ children, title }: Props) => {
             {children}
           </Content>
           <Footer style={{ textAlign: 'center' }}>
-            ©2025 Criado com Ant Design
+            ©2025 Veaser
           </Footer>
         </Layout>
       </div>

@@ -1,14 +1,10 @@
-import { GetServerSideProps, GetServerSidePropsResult, GetStaticPropsContext } from 'next';
-import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
-import { useTranslation } from 'react-i18next';
+import { GetServerSideProps, GetServerSidePropsResult } from 'next';
 
 import Dashboard from '@/components/layouts/dashboard';
-import { AutoComplete, AutoCompleteProps, Button, Card, Col, DatePicker, Flex, Form, InputNumber, Radio, RadioChangeEvent, Row, Select } from 'antd';
-import { useState } from 'react';
-import centers from '../../../data/centers.json'
 import MakeZaf from '@/fragments/makeZaf';
 import { ICenter, ICenterListResponse } from '@/interfaces/ICenters';
 import { serverApiFetch } from '@/services/api_request';
+import { DatePicker } from 'antd';
 
 const { RangePicker } = DatePicker;
 

@@ -1,6 +1,4 @@
 import {
-  ArrowLeftOutlined,
-  ArrowRightOutlined,
   BarChartOutlined,
   CalendarOutlined,
   CheckCircleOutlined,
@@ -8,23 +6,17 @@ import {
   DeploymentUnitOutlined,
   DownOutlined,
   FileAddOutlined,
-  FileSearchOutlined,
   GroupOutlined,
-  ReconciliationOutlined,
   RiseOutlined,
   SettingOutlined,
-  ShopOutlined,
-  ShoppingOutlined,
   TagOutlined,
   TagsOutlined
 } from '@ant-design/icons'
-import { Button, Card, Col, Dropdown, Row, Space, Table, Tabs } from 'antd'
+import { Button, Card, Col, Dropdown, Row, Space, Table } from 'antd'
 import { GetServerSideProps, GetServerSidePropsResult } from 'next'
-import orders from '../data/orders.json'
-import sales from '../data/sales.json'
 import styles from '../styles/admin-buffer.module.css'
 
-import NetflowChart from '@/components/Charts/NetflowChart'
+import { DetailsTable } from '@/components/DetailsTable'
 import Dashboard from '@/components/layouts/dashboard'
 import { ICenter, ICenterListResponse } from '@/interfaces/ICenters'
 import { IDashboard, IDashboardListResponse } from '@/interfaces/IDashboard'
@@ -477,225 +469,40 @@ const DashboardPage = (props: Props) => {
     },
   ]
 
-  const ordersColumns = [
-    {
-      title: 'Num Ordem',
-      dataIndex: 'NumOrdem',
-      key: 'NumOrdem',
-    },
-    {
-      title: 'Referência',
-      dataIndex: 'Referencia',
-      key: 'Referencia',
-    },
-    {
-      title: 'Tipo (Observação)',
-      dataIndex: 'TipoObservacao',
-      key: 'TipoObservacao',
-    },
-    {
-      title: 'Fornecedor',
-      dataIndex: 'Fornecedor',
-      key: 'Fornecedor',
-    },
-    {
-      title: 'Data Criação',
-      dataIndex: 'DataCriacao',
-      key: 'DataCriacao',
-    },
-    {
-      title: 'Data Entrega',
-      dataIndex: 'DataEntrega',
-      key: 'DataEntrega',
-    },
-    {
-      title: 'Qtd Original',
-      dataIndex: 'QtdOriginal',
-      key: 'QtdOriginal',
-    },
-    {
-      title: 'Qtd Faltante',
-      dataIndex: 'QtdFaltante',
-      key: 'QtdFaltante',
-    },
-    {
-      title: 'Qtd Trânsito',
-      dataIndex: 'QtdTransito',
-      key: 'QtdTransito',
-    },
-    {
-      title: 'Buffer Tempo',
-      dataIndex: 'BufferTempo',
-      key: 'BufferTempo',
-      render: (value: number) => `${value.toFixed(2)}%`,
-      onCell: (record: any) => {
-        const value = record.BufferTempo
-
-        let backgroundColor = ''
-
-        if (value > 100) {
-          backgroundColor = 'blue'
-        } else if (value > 70) {
-          backgroundColor = 'green'
-        } else if (value > 40) {
-          backgroundColor = 'yellow'
-        } else if (value >= 1) {
-          backgroundColor = 'red'
-        } else {
-          backgroundColor = 'black'
-        }
-
-        return {
-          style: {
-            backgroundColor,
-            color: backgroundColor === 'black' || backgroundColor === 'blue' ? 'white' : 'black',
-          },
-        }
-      }
-    },
-    {
-      title: 'Buffer Execução',
-      dataIndex: 'BufferExecucao',
-      key: 'BufferExecucao',
-      render: (value: number) => `${value.toFixed(2)}%`,
-      onCell: (record: any) => {
-        const value = record.BufferExecucao
-
-        let backgroundColor = ''
-
-        if (value > 100) {
-          backgroundColor = 'blue'
-        } else if (value > 70) {
-          backgroundColor = 'green'
-        } else if (value > 40) {
-          backgroundColor = 'yellow'
-        } else if (value >= 1) {
-          backgroundColor = 'red'
-        } else {
-          backgroundColor = 'black'
-        }
-
-        return {
-          style: {
-            backgroundColor,
-            color: backgroundColor === 'black' || backgroundColor === 'blue' ? 'white' : 'black',
-          },
-        }
-      }
-
-    }
-  ]
 
   return (
     <Dashboard title='Dashboard'>
       <Row gutter={16} style={{ marginTop: 24 }}>
         <Col span={17}>
           <Card>
-            <Space direction="horizontal" size="small">
-              <Card title="Espaço de trabalho">
-                <Space direction="vertical" size="small">
-                  <Space>
-                    <Button icon={<CheckCircleOutlined />}>Iniciar</Button>
-                    <Button disabled icon={<CloseCircleOutlined />}>Finalizar</Button>
-                  </Space>
-
-                  <Space>
-                    <Button icon={<CheckCircleOutlined />}>Aprovar</Button>
-                    <Button icon={<CloseCircleOutlined />}>Desaprovar</Button>
-                  </Space>
-                </Space>
-              </Card>
-
-
-              <Card title="Distribuição Priorizada">
-                <Space direction="vertical" size="small">
-                  <Button icon={<CheckCircleOutlined />}>Distribuição Eficiente</Button>
-                  <Button icon={<DeploymentUnitOutlined />}>Carregar Alocação Priorizada</Button>
-                  <Button icon={<CheckCircleOutlined />}>Sugerir Alocação Priorizada</Button>
-                </Space>
-              </Card>
-
-              <Card title="Outras Funções">
-                <Space direction="vertical" size="small">
-                  <Button icon={<TagOutlined />}>Criar Etiqueta</Button>
-                </Space>
-              </Card>
-            </Space>
             <Table
               dataSource={props.mainTable}
               scroll={{ x: 'max-content' }}
               columns={mainColumns}
               rowKey="centerProductId"
               rowSelection={rowSelectionMainTable}
+              pagination={{
+                pageSize: 15
+              }}
               size='small'
               expandable={{
-                expandedRowRender: (record) => <div style={{ backgroundColor: 'cadetblue', padding: '12px' }}>
-                  <Tabs
-                    defaultActiveKey="2"
-                    type="card"
-                    items={[
-                      {
-                        key: '1',
-                        label: `Entradas`,
-                        children: <Table
-                          dataSource={orders}
-                          columns={ordersColumns}
-                          size='small'
-                          pagination={false}
-                        />,
-                        icon: <ArrowLeftOutlined />,
-                      },
-                      {
-                        key: '2',
-                        label: `Saídas`,
-                        children: <Table
-                          dataSource={sales}
-                          columns={ordersColumns}
-                          size='small'
-                          pagination={false}
-                        />,
-                        icon: <ArrowRightOutlined />,
-                      },
-                      {
-                        key: '3',
-                        label: `Centros`,
-                        children: <NetflowChart />,
-                        icon: <ShopOutlined />,
-                      },
-                      {
-                        key: '4',
-                        label: `Buffer DDMRP`,
-                        children: `Buffer DDMRP`,
-                        icon: <FileSearchOutlined />,
-                      },
-                      {
-                        key: '5',
-                        label: `DAF`,
-                        children: `DAF`,
-                        icon: <ReconciliationOutlined />,
-                      },
-                      {
-                        key: '6',
-                        label: `ZAF`,
-                        children: `ZAF`,
-                        icon: <ReconciliationOutlined />,
-                      },
-                      {
-                        key: '7',
-                        label: `Pedidos Ficticios`,
-                        children: `Pedidos Ficticios`,
-                        icon: <ShoppingOutlined />,
-                      },
-                    ]}
-                  />
-                </div>
+                expandedRowRender: (record) => <DetailsTable row={record} />
               }}
               className={styles['custom-table']}
             />
           </Card>
         </Col>
         <Col span={7}>
-
+          <Card style={{ width: '100%' }}>
+            <Space direction="vertical" size="small">
+              <Button icon={<CheckCircleOutlined />}>Iniciar</Button>
+              <Button disabled icon={<CloseCircleOutlined />}>Finalizar</Button>
+              <Button icon={<CheckCircleOutlined />}>Distribuição Eficiente</Button>
+              <Button icon={<DeploymentUnitOutlined />}>Carregar Alocação Priorizada</Button>
+              <Button icon={<CheckCircleOutlined />}>Sugerir Alocação Priorizada</Button>
+              <Button icon={<TagOutlined />}>Criar Etiqueta</Button>
+            </Space>
+          </Card>
           <Card style={{ width: '100%' }}>
             <Table
               dataSource={props.centers}

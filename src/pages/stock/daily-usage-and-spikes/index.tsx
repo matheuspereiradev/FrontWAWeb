@@ -101,12 +101,43 @@ const HistoryListPage = (props: Props) => {
                     columns={columns}
                     loading={loading}
                     pagination={{
-                        pageSize: 20,
+                        pageSize: 10,
                         showSizeChanger: true,
                         pageSizeOptions: ['10', '20', '50', '100'],
                     }}
                     size='small'
                     scroll={{ x: 'max-content' }}
+                    summary={pageData => {
+                        const total = props.history.reduce((sum, item) => sum + item.consumption, 0);
+                        const avg = props.history.length > 0 ? total / props.history.length : 0;
+                        const qt = props.history.length;
+
+                        return (
+                            <Table.Summary fixed>
+                                <Table.Summary.Row>
+                                    <Table.Summary.Cell index={0} colSpan={3}>
+                                        <strong>Totais (página atual):</strong>
+                                    </Table.Summary.Cell>
+                                    <Table.Summary.Cell index={3}>
+                                        <div>
+                                            <div><strong>Quantidade:</strong> {qt}</div>
+                                        </div>
+                                    </Table.Summary.Cell>
+                                    <Table.Summary.Cell index={4}>
+                                        <div>
+                                            <div><strong>Soma:</strong> {total.toFixed(2)}</div>
+                                            <div><strong>Média:</strong> {avg.toFixed(2)}</div>
+                                        </div>
+                                    </Table.Summary.Cell>
+                                    {/* Preencher células restantes com vazios */}
+                                    {columns.slice(5).map((_, index) => (
+                                        <Table.Summary.Cell key={index} index={index} />
+                                    ))}
+                                </Table.Summary.Row>
+                            </Table.Summary>
+                        );
+                    }}
+
                 />
             </Card>
         </Dashboard>

@@ -352,6 +352,7 @@ export default function NetflowChart() {
             ]}
             legendToggle
             options={{
+                legend: { position: 'top' },
                 series: { 3: { type: 'line' }, 4: { type: 'line' } },
                 isStacked: true,
                 title: `Buffer de Fluxo Líquido`,
@@ -359,13 +360,11 @@ export default function NetflowChart() {
                 hAxis: {
                     title: "dia",
                     titleTextStyle: { color: '#333', },
-                    gridlines: { color: 'transparent' },      // remove linhas horizontais (do eixo X)
+                    gridlines: { color: 'transparent' },
                     minorGridlines: { color: 'transparent' }
                 },
                 vAxis: {
                     minValue: 80,
-                    gridlines: { color: 'transparent' },      // remove linhas verticais (do eixo Y)
-                    minorGridlines: { color: 'transparent' }
                 },
                 focusTarget: 'category',
                 crosshair: {

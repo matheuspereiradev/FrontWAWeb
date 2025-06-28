@@ -3,10 +3,9 @@ import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { useTranslation } from 'react-i18next';
 
 import Dashboard from '@/components/layouts/dashboard';
-import { AutoComplete, AutoCompleteProps, Button, Card, Checkbox, Col, DatePicker, Flex, Form, InputNumber, Radio, RadioChangeEvent, Row, Select } from 'antd';
-import { useState } from 'react';
+import { AutoComplete, AutoCompleteProps, Button, Card, Checkbox, Col, DatePicker, Flex, Form, InputNumber, Row, Select } from 'antd';
 import TextArea from 'antd/es/input/TextArea';
-import centers from '../../../data/centers.json'
+import { useState } from 'react';
 
 const { RangePicker } = DatePicker;
 
@@ -45,7 +44,7 @@ const BafPage = () => {
         <Form layout='vertical'>
           <Row gutter={16}>
             <Col span={12}>
-              <Form.Item label="Centro">
+              {/* <Form.Item label="Centro">
                 <Select
                   showSearch
                   placeholder="Selecione um centro"
@@ -61,7 +60,7 @@ const BafPage = () => {
                     })
                   }
                 />
-              </Form.Item>
+              </Form.Item> */}
             </Col>
             <Col span={12}>
               <Form.Item label="Referência">
