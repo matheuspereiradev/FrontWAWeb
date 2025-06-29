@@ -5,6 +5,7 @@ import {
   CloseCircleOutlined,
   DeploymentUnitOutlined,
   DownOutlined,
+  EyeOutlined,
   FileAddOutlined,
   GroupOutlined,
   RiseOutlined,
@@ -137,7 +138,7 @@ const DashboardPage = (props: Props) => {
           }}>
             <a onClick={(e) => e.preventDefault()}>
               <Space>
-                Adicionar
+                <SettingOutlined />
                 <DownOutlined />
               </Space>
             </a>
@@ -186,7 +187,7 @@ const DashboardPage = (props: Props) => {
           }}>
             <a onClick={(e) => e.preventDefault()}>
               <Space>
-                Detalhes
+                <EyeOutlined/>
                 <DownOutlined />
               </Space>
             </a>
@@ -195,41 +196,26 @@ const DashboardPage = (props: Props) => {
       ),
     },
     {
-      title: 'Id Centro Produto',
-      dataIndex: 'centerProductId',
-      key: 'centerProductId',
-      sorter: (a: any, b: any) => a.centerProductId - b.centerProductId,
-    },
-    {
-      title: 'IdCentro',
-      dataIndex: 'centerId',
-      key: 'centerId',
-      sorter: (a: any, b: any) => a.centerId - b.centerId,
-    },
-    {
-      title: 'IdProduto',
-      dataIndex: 'productId',
-      key: 'productId',
-      sorter: (a: any, b: any) => a.productId - b.productId,
-    },
-    {
       title: 'Referencia',
+      fixed: 'left',
       dataIndex: 'productReference',
       key: 'productReference',
       sorter: (a: any, b: any) => a.productReference.localeCompare(b.productReference),
     },
+    {
+      title: 'Cód Centro',
+      fixed: 'left',
+      dataIndex: 'centerCode',
+      key: 'centerCode',
+      sorter: (a: any, b: any) => a.centerCode.localeCompare(b.centerCode),
+    },    
     {
       title: 'Descrição',
       dataIndex: 'productDescription',
       key: 'productDescription',
       sorter: (a: any, b: any) => a.productDescription.localeCompare(b.productDescription),
     },
-    {
-      title: 'Cód Centro',
-      dataIndex: 'centerCode',
-      key: 'centerCode',
-      sorter: (a: any, b: any) => a.centerCode.localeCompare(b.centerCode),
-    },
+    
     {
       title: 'Centro',
       dataIndex: 'centerDescription',
@@ -255,21 +241,26 @@ const DashboardPage = (props: Props) => {
       key: 'netFlowBuffer',
       render: (value: number) => `${(value * 100).toFixed(2)}%`,
       onCell: (record: any) => {
-        const value = record.netFlowBuffer * 100
 
-        let backgroundColor = ''
+        let backgroundColor = record.netFlowBufferColor
 
-        if (value > 100) {
-          backgroundColor = 'blue'
-        } else if (value > 70) {
-          backgroundColor = 'green'
-        } else if (value > 40) {
-          backgroundColor = 'yellow'
-        } else if (value >= 1) {
-          backgroundColor = 'red'
-        } else {
-          backgroundColor = 'black'
+        return {
+          style: {
+            backgroundColor,
+            color: backgroundColor === 'black' || backgroundColor === 'blue' ? 'white' : 'black', // contraste
+          },
         }
+      }
+    },
+    {
+      title: 'Buffer Execução',
+      dataIndex: 'executionBuffer',
+      sorter: (a: any, b: any) => a.executionBuffer - b.executionBuffer,
+      key: 'executionBuffer',
+      render: (value: number) => `${(value * 100).toFixed(2)}%`,
+      onCell: (record: any) => {
+
+        let backgroundColor = record.executionBufferColor
 
         return {
           style: {
@@ -446,7 +437,25 @@ const DashboardPage = (props: Props) => {
         }
       },
       sorter: (a: any, b: any) => a.topOfRed - b.topOfRed,
-    }
+    },
+    {
+      title: 'Id Centro Produto',
+      dataIndex: 'centerProductId',
+      key: 'centerProductId',
+      sorter: (a: any, b: any) => a.centerProductId - b.centerProductId,
+    },
+    {
+      title: 'IdCentro',
+      dataIndex: 'centerId',
+      key: 'centerId',
+      sorter: (a: any, b: any) => a.centerId - b.centerId,
+    },
+    {
+      title: 'IdProduto',
+      dataIndex: 'productId',
+      key: 'productId',
+      sorter: (a: any, b: any) => a.productId - b.productId,
+    },
 
   ]
 
